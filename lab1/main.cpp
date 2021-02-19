@@ -17,15 +17,12 @@ void PrintArr(double *, int);
 
 void Task1_1(double *&, int &);
 void Task1_2(double *&, int &);
-void Task1();
 
 void Task2_1(double *&, int &);
 void Task2_2(double *&, int &);
-void Task2();
 
 void Task3_1(double *&, int &);
 void Task3_2(double *&, int &);
-void Task3();
 
 void Task4(double *&, int &);
 
@@ -35,31 +32,38 @@ void Task6(double *&, int &);
 
 void Task7(double *&, int &);
 
-void Task8_1();
 void Task8_2(double *&, int &);
-void Task8();
+
 
 
 
 int main() {
   CreateFiles();
+  
   Menu();
   return 0;
 }
 
 void Menu() {
-  int key;
+    int key; 
+    int n = Num();
+    double *arr = CreateArr(n);
+    FillArr(arr, n);
+    PrintArr(arr, n); 
 
     do {
         cout << " ---------------- " <<endl;
-        cout << " 1 - Task 1" << endl;
-        cout << " 2 - Task 2" << endl;
-        cout << " 3 - Task 3" << endl;
-        cout << " 4 - Task 4" << endl;
-        cout << " 5 - Task 5" << endl;
-        cout << " 6 - Task 6" << endl;
-        cout << " 7 - Task 7" << endl;
-        cout << " 8 - Task 8" << endl;
+        cout << " 1 - Task 1(random)" << endl;
+        cout << " 2 - Task 1(enter)" << endl;
+        cout << " 3 - Task 2(random)" << endl;
+        cout << " 4 - Task 2(enter)" << endl;
+        cout << " 5 - Task 3(random)" << endl;
+        cout << " 6 - Task 3(enter)" << endl;
+        cout << " 7 - Task 4" << endl;
+        cout << " 8 - Task 5" << endl;
+        cout << " 9 - Task 6" << endl;
+        cout << " 10 - Task 7" << endl;
+        cout << " 11 - Task 8" << endl;
         cout << " 0 - Escape" << endl;
         cout << " ---------------- " << endl;
 
@@ -67,50 +71,23 @@ void Menu() {
 
         switch (key)
         {
-            case 1: Task1(); break;
-            case 2: Task2(); break;
-            case 3: Task3(); break;
-            case 4: {
-              int n = Num();
-              double *arr = CreateArr(n);
-              FillArr(arr, n);
-              PrintArr(arr, n);
-              Task4(arr, n);
-              delete[] arr;
-              break;
-            }
-            case 5: {
-              int n = Num();
-              double *arr = CreateArr(n);
-              FillArr(arr, n);
-              PrintArr(arr, n);
-              Task5(arr, n);
-              delete[] arr;
-              break;
-            }
-            case 6: {
-              int n = Num();
-              double *arr = CreateArr(n);
-              FillArr(arr, n);
-              PrintArr(arr, n);
-              Task6(arr, n);
-              delete[] arr;
-              break;
-            }
-            case 7: {
-              int n = Num();
-              double *arr = CreateArr(n);
-              FillArr(arr, n);
-              PrintArr(arr, n);
-              Task7(arr, n);
-              delete[] arr;
-              break;
-            }
-            case 8: Task8();
+            case 1: Task1_1(arr, n); break;
+            case 2: Task1_2(arr, n); break;
+            case 3: Task2_1(arr, n); break;
+            case 4: Task2_2(arr, n); break;
+            case 5: Task3_1(arr, n); break;
+            case 6: Task3_2(arr, n); break;
+            case 7: Task4(arr, n); break;
+            case 8: Task5(arr, n); break;
+            case 9: Task6(arr, n); break;
+            case 10: Task7(arr, n); break;
+            case 11: Task8_2(arr, n); break;
         case 0:cout << "'ll see ya" << endl; return;
-        default:cout << "!!!Error, try again... " << endl;break;
+        default:cout << "!!!Error, try again... " << endl; break;
         }
     } while (key);
+    delete[] arr;
+  
 }
 
 void CreateFiles() {
@@ -166,43 +143,6 @@ void PrintArr(double *arr, int n) {
   }
 }
 
-void Task1() {
-  
-  int key;
-  do {
-    cout << " ---------------- " <<endl;
-    cout << " 1 - Random number." << endl;
-    cout << " 2 - Enter number." << endl;
-    cout << " 0 - Escape." << endl;
-    cout << " ---------------- " <<endl;
-    cin >> key;
-    switch (key) {
-      case 1: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task1_1(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 2: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task1_2(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 0: cout<<"'ll see ya!"<<endl;break;
-      default:cout << "!!!Error, try again... " << endl;break;
-      }
-  }while(key);
-  
-
-}
-
 void Task1_1(double *&arr, int &n) {
   
   double random = RAND;
@@ -233,42 +173,6 @@ void Task1_2(double *&arr, int &n) {
   PrintArr(arr, n);
 }
 
-void Task2() {
-  int key;
-  do {
-    cout << " ---------------- " <<endl;
-    cout << " 1 - Random number." << endl;
-    cout << " 2 - Enter number." << endl;
-    cout << " 0 - Escape." << endl;
-    cout << " ---------------- " <<endl;
-    cin >> key;
-    switch (key) {
-      case 1: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task2_1(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 2: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task2_2(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 0: cout<<"'ll see ya!"<<endl;break;
-      default:cout << "!!!Error, try again... " << endl;break;
-      }
-  }while(key);
-  
-
-}
-
 void Task2_1(double *&arr, int &n) {
   double random = RAND;
   cout << "random number = " << random << endl;
@@ -297,42 +201,6 @@ void Task2_2(double *&arr, int &n) {
   delete[] arr;
   arr = buff;
   PrintArr(arr, n);
-}
-
-void Task3() {
-  int key;
-  do {
-    cout << " ---------------- " <<endl;
-    cout << " 1 - Random number." << endl;
-    cout << " 2 - Enter number." << endl;
-    cout << " 0 - Escape." << endl;
-    cout << " ---------------- " <<endl;
-    cin >> key;
-    switch (key) {
-      case 1: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task3_1(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 2: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task3_2(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 0: cout<<"'ll see ya!"<<endl;break;
-      default:cout << "!!!Error, try again... " << endl;break;
-      }
-  }while(key);
-  
-
 }
 
 void Task3_1(double *&arr, int &n) {
@@ -387,12 +255,14 @@ void Task4(double *&arr, int &n) {
   delete[] arr;
   arr = buff;
   PrintArr(arr, n);
+
 }
 
 void Task5(double *&arr, int &n) {
+
   double *buff = new double[n-1];
-  for (int i = 0; i < n; i++){
-    buff[i] = arr[i+1];
+  for (int i = 1; i < n; i++){
+    buff[i-1] = arr[i];
   }
   n--;
   delete[] arr;
@@ -434,7 +304,6 @@ void Task7(double *&arr, int &n) {
     count ++;
     if (arr[i] == num) {
       ind = false;
-
     }
   }
   if (count >= 1) {
@@ -453,78 +322,6 @@ void Task7(double *&arr, int &n) {
   } else {
     cout << "ERROR! There's no such element in the array..." << endl;
   }
-}
-
-void Task8() {
-  int key;
-  do {
-    cout << " ---------------- " <<endl;
-    cout << " 1 - An array containing duplicate elements ." << endl;
-    cout << " 2 - Random array." << endl;
-    cout << " 0 - Escape." << endl;
-    cout << " ---------------- " <<endl;
-    cin >> key;
-    switch (key) {
-      case 1: Task8_1(); break;
-      case 2: {
-        int n = Num();
-        double *arr = CreateArr(n);
-        FillArr(arr, n);
-        PrintArr(arr, n);
-        Task8_2(arr, n);
-        delete[] arr;
-        break;
-      }
-      case 0: cout<<"'ll see ya!"<<endl;break;
-      default:cout << "!!!Error, try again... " << endl;break;
-      }
-  }while(key);
-
-}
-
-void Task8_1() {
-  ifstream file("arr_r.txt");
-  int n = 0;
-  double numby;
-  while(file >> numby) {
-      n++;
-  }
-  file.close();
-  ifstream filein("arr_r.txt");
-  double *arr = CreateArr(n);
-  for (int i = 0; i < n; i++) {
-    filein >> arr[i];
-  }
-  filein.close();
-  PrintArr(arr, n);
-
-  double el;
-  cout << "Enter element ---> "; cin >> el; cout << endl;
-  int count = 0;
-
-  for (int i = 0; i < n; i++) {
-    if (arr[i] == el) {
-      count++;
-    }
-  }
-  cout<<"count = " << count << endl;
-
-  double *buff = new double[n-count];
-  int kf = 0;
-  for (int i = 0; i < n; i++) {
-    if (arr[i] != el) {
-      buff[i-kf] = arr[i];
-      
-    } else {
-      kf++;
-    }
-  }
-  n-=count;
-  delete[] arr;
-  arr = buff;
-  PrintArr(arr, n);
-
-  delete[] arr;
 }
 
 void Task8_2(double *&arr, int &n) {
