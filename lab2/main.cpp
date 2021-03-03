@@ -1,26 +1,31 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
+#include <cmath>
 
 using namespace std;
 
 int GetN();
-int **CreateMatrix(int, int);
+double **CreateMatrix(int, int);
 double *CreateArray(int);
 
-void FillMAtrixRandom(int **&, int &, int &);
-void FillMatrix(int **&, int &, int &);
-void FillTheEquation(int **&, double *&, int &, int &);
+void FillMAtrixRandom(double **&, int &, int &);
+void FillMatrix(double **&, int &, int &);
+void FillTheEquation(double **&, double *&, int &, int &);
 
-void PrintMatrix(int **&, int &, int &);
-void PrintTheEquation(int **&,double *&, int &, int &);
+void PrintMatrix(double **&, int &, int &);
+void PrintTheEquation(double **&,double *&, int &, int &);
+void PrintArr(double *&, int &);
 
-void DelMatrix(int **&, int &);
+void DelMatrix(double **&, int &);
 void DelArray(double *&);
 
-int Maxi(int **&, int &, int &, int);
-void Permutation(int **&, int &n, int &m, int, int);
-void Gaus(int **&, double *&, int &, int &);
+int Maxi(double **&, int &, int &, int);
+void Permutation(double **&, int &, int &, int, int);
+void Normize(double **&, double *&, int &, int &, int);
+void Reverse(double **&, double *&, double *&, int &, int &, int);
+void Gaus(double **&, double *&, int &, int &);
+
 
 int main() {
   int n, m;
@@ -28,10 +33,12 @@ int main() {
   n = GetN();
   cout << "Enter number of columns";
   m = GetN();
-  int **matrix = CreateMatrix(n, m);
+  double **matrix = CreateMatrix(n, m);
   double *y = CreateArray(n);
   FillTheEquation(matrix,y, n, m);
   PrintTheEquation(matrix, y, n, m);
+  Gaus(matrix, y, n, m);
+  
   DelArray(y);
   DelMatrix(matrix, n);
   return 0;
@@ -56,16 +63,16 @@ double *CreateArray(int n) {
   return y;
 }
 
-int **CreateMatrix(int N, int M) {
-  int **matrix;
-  matrix = new int*[N];
+double **CreateMatrix(int N, int M) {
+  double **matrix;
+  matrix = new double*[N];
   for (int i = 0; i<N; i++) {
-    matrix[i] = new int [M];
+    matrix[i] = new double [M];
   }
   return matrix;
 }
 
-void FillMAtrixRandom(int **&matrix, int &n, int &m) {
+void FillMAtrixRandom(double **&matrix, int &n, int &m) {
   srand(time(0));
   for (int i = 0; i<n; i++) {
     for (int j = 0; j<m; j++) {
@@ -74,7 +81,7 @@ void FillMAtrixRandom(int **&matrix, int &n, int &m) {
   }
 }
 
-void FillMatrix(int **&matrix, int &n, int &m) {
+void FillMatrix(double **&matrix, int &n, int &m) {
   for (int i = 0; i<n; i++) {
     for (int j = 0; j<m; j++) {
       cout <<  "A" << i + 1 << j + 1 << " = "; cin >> matrix[i][j];
@@ -83,7 +90,7 @@ void FillMatrix(int **&matrix, int &n, int &m) {
   }
 }
 
-void PrintMatrix(int **&matrix, int &n, int &m) {
+void PrintMatrix(double **&matrix, int &n, int &m) {
   for (int i = 0; i<n; i++) {
     for (int j = 0; j<m; j++) {
       cout << matrix[i][j] << "\t";
@@ -92,7 +99,7 @@ void PrintMatrix(int **&matrix, int &n, int &m) {
   }
 }
 
-void PrintTheEquation(int **&matrix,double *&y, int &n, int &m) { 
+void PrintTheEquation(double **&matrix,double *&y, int &n, int &m) { 
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
       cout << matrix[i][j] << "*x" << j;
@@ -101,19 +108,26 @@ void PrintTheEquation(int **&matrix,double *&y, int &n, int &m) {
     }
     cout << " = " << y[i] << endl;
   }
+  cout << endl;
 }
 
-void FillTheEquation(int **&matrix, double *&y, int &n, int &m) {
+void PrintArr(double *&a, int &n) {
+  for (int i{0}; i < n; i++) {
+    cout << "x" << i << " = " << a[i] << endl;
+  }
+}
+
+void FillTheEquation(double **&matrix, double *&y, int &n, int &m) {
   for (int i = 0; i<n; i++) {
     for (int j = 0; j<m; j++) {
       cout <<  "A" << i + 1 << j + 1 << " = "; cin >> matrix[i][j];
       cout << endl; 
     }
-    cout << "B" << i + 1 << " = "; cin >> y[i];
+    cout << "B" << i + 1 << " = "; cin >> y[i]; cout << endl;
   }
 }
 
-void DelMatrix(int **&matrix, int &n) {
+void DelMatrix(double **&matrix, int &n) {
 
   for (int i = 0; i<n; i++) {
     delete[]matrix[i];
@@ -127,35 +141,78 @@ void DelArray(double *&y) {
   y = NULL;
 }
 
-int Maxi(int **&matrix, int &n, int&m, int k) {
+int Maxi(double **&matrix, int &n, int&m, int k) {
   /*Эта функция находит индекс строки с максимальным элементом, внутри одного столбца*/
-  int maxi = matrix[0][0], index{0};
-   for (int i = 0; i < n; i++) {
+  double maxi = matrix[k][k]; int index{k};
+   for (int i = k; i < n; i++) {
      if ( matrix[i][k] > maxi) {
        maxi = matrix[i][k];
        index = i;
      }
    }
+   //cout << "maxi = " << maxi << endl;
+   //cout << "index = " << index << endl;
   return index;
 }
 
-void Permutation(int **&matrix, int &n, int &m, int k, int index) {
+void Permutation(double **&matrix, int &n, int &m, int k, int index) {
+   
   double t;
   for (int i{0}; i < n; i++) {
     t = matrix[k][i];
     matrix[k][i] = matrix[index][i];
     matrix[index][i] = t;
   }
+  
 }
 
-void Gaus(int **&a, double *&y, int &n, int &m) {
+void Normize(double **&a, double *&y, int &n, int &m, int k) {
+
+  for (int i = k; i<n; i++) {
+    double t = a[i][k];
+    if (fabs(t) < 0.00001) continue;
+    for (int j{0}; j < m; j++) {
+      a[i][j] = a[i][j] / t ;
+    }
+    y[i] = y[i] / t;
+    if (i == k) continue;
+    for (int j{0}; j < m; j++) {
+      a[i][j] -= a[k][j];
+    }
+    y[i] -= y[k];
+  }
+}
+
+void Reverse(double **&a, double *&y, double *&x, int &n, int &m, int k) {
+  for (k = m - 1; k >= 0; k--)
+  {
+    x[k] = y[k];
+    for (int i = 0; i < k; i++)
+      y[i] = y[i] - a[i][k] * x[k];
+  }
+  
+}
+
+void Gaus(double **&a, double *&y, int &n, int &m) {
   int k{0};
+  int index;
+  double t;
   while(k < n) {
-    int index = Maxi(a, n, m, k);
+    //Находим строку с максимальным элементом в текущем столбце
+    index = Maxi(a, n, m, k);
+    // Совершаем перестановку строк
     Permutation(a, n, m, k, index);
-    double t = y[k];
+    // Отдельная перестановка y;
+    t = y[k];
     y[k] = y[index];
     y[index] = t;
-    //to be continued...
+    // Норируем ур-е
+    Normize(a, y, n, m, k);
+    k++;
   }
+  double *x = CreateArray(m);
+  Reverse(a, y, x, n, m, k);
+  PrintArr(x, m);
+  DelArray(x);
+  
 }
