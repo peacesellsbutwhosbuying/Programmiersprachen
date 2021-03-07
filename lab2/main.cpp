@@ -1,403 +1,197 @@
+/*includings*/
 #include <iostream>
-#include <cstdlib>
-#include <time.h>
-#include <cmath>
+#include <ctime>
+#include <fstream>
+#include <math.h>
+#include "array.h"
+#include "matrix.h"
+
 
 using namespace std;
 
-void menu();
-void task1();
-void task2();
-void task3();
-
-int GetN();
-double **CreateMatrix(int, int);
-double *CreateArray(int);
-
-void FillMAtrixRandom(double **&, int &, int &);
-void FillMatrix(double **&, int &, int &);
-void FillTheEquation(double **&, double *&, int &, int &);
-void FillTheEquationRandom(double **&, double *&, int &, int &);
-void fillIdentityMatrix(double **&, int &, int &);
-void fillIdentityEq(double **&, double *&, int &, int &);
-
-void PrintMatrix(double **&, int &, int &);
-void PrintTheEquation(double **&,double *&, int &, int &);
-void PrintArr(double *&, int &);
-
-void DelMatrix(double **&, int &);
-void DelArray(double *&);
-
-int Maxi(double **&, int &, int &, int);
-void Permutation(double **&, int &, int &, int, int);
-void NormizeEq(double **&, double *&, int &, int &, int);
-void Normize(double **&, int &, int&);
-void Reverse(double **&, double *&, double *&, int &, int &, int);
-void Gauss(double **&, double *&, int &, int &);
-void Determenant(double **&, int &, int &);
-
+/*functions*/
+int getNum();
+void permutation(double **&M, int &n, int &m, int k, double &);
+bool currentMinorMethod(double **&, int &, int &, double &);
+bool solutionCreation(double **&, double *&, int &, int &, double &);
+void testMenu(double **&, int &, int &);
+double determinant(double **&, int &, int &, double);
 
 int main() {
-  int n, m;
-  cout << "Enter number of lines";
-  n = GetN();
-  cout << "Enter number of columns";
-  m = GetN();
-  double **matrix = CreateMatrix(n, m);
-  double *y = CreateArray(n);
-  FillMatrix(matrix, n, m);
-  PrintMatrix(matrix, n, m);
-  Determenant(matrix, n, m);
-  DelMatrix(matrix, n);
-  DelArray(y);
-  //menu();
-  return 0;
-}
-
-void menu() {
-    int key;  
-
-    do {
-        cout << " ---------------- " <<endl;
-        cout << " 1 - Gauss Method" << endl;
-        cout << " 2 - Determinant" << endl;
-        cout << " 3 - Inverse matrix" << endl;
-        cout << " 0 - Escape" << endl;
-        cout << " ---------------- " << endl;
-
-        cin >> key;
-
-        switch (key)
-        {
-            case 1: task1();  break;
-            //case 2: task2();  break;
-            //case 3: task3();  break;
-        case 0:cout << "'ll see ya" << endl; return;
-        default:cout << "!!!Error, try again... " << endl; break;
-        }
-    } while (key);
-    
+  cout << "Enter matrix size";
+  int n;
+  n = getNum();
+  int m;
+  m = n + 1;
+  double det{1};
+  double **M = createMatrix(n, m);
+  double *x = createArray(n);
+  testMenu(M, n, m);
+  printMatrix(M, n, m);
+  if (solutionCreation(M, x, n, m, det)) {
+    printArray(x, n);
+  } 
+  else {
+    cout << "U GAY" << endl;
+  }
+  printMatrix(M, n, m);
   
+  det = determinant(M, n, m, det);
+  cout << "DET = " << det << endl;
+
+  deleteArray(x);
+  deleteMatrix(M, n);
 }
 
-int GetN() {
+int getNum() {
   float n;
 
   do {
-    cout << " --> ";
+    cout << " ---> "; 
     cin >> n;
     if (n <= 0 || (n - (int)n)) {
-      cout << "ERROR! Try again...";
+      cout << "ERROR! Please, try again...";
+      cout << endl;
     }
-  } while(n <= 0 || (n - (int)n));
-
+  } while (n <= 0 || (n - (int)n));
+  
   return n;
 }
 
-double *CreateArray(int n) {
-  double *y = new double[n];
-  return y;
-}
-
-double **CreateMatrix(int N, int M) {
-  double **matrix;
-  matrix = new double*[N];
-  for (int i = 0; i<N; i++) {
-    matrix[i] = new double [M];
-  }
-  return matrix;
-}
-
-void FillMAtrixRandom(double **&matrix, int &n, int &m) {
-  srand(time(0));
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      matrix[i][j] = rand()%10-2;
+void permutation(double **&M, int &n, int &m, int k, double &det) {
+  for (int i{k+1}; i < n; i++) {
+    if (M[i][k] != 0) {
+      for (int j{}; j < m; j++) {
+        double t = M[k][j];
+        M[k][j] = M[i][j];
+        M[i][j] = t;
+      }
+      det *= -1;
+      break;
     }
-  }
+  }  
 }
 
-void FillMatrix(double **&matrix, int &n, int &m) {
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      cout <<  "A" << i + 1 << j + 1 << " = "; cin >> matrix[i][j];
-      cout << endl; 
+bool currentMinorMethod(double **&M, int &n, int &m, double &det) {
+  for (int i{}; i < n; i++) {
+    if (M[i][i] == 0) {
+      permutation(M, n, m, i, det);
     }
-  }
-}
-
-void fillIdentityMatrix(double **&a, int &n, int &m) {
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      if (i == j) {
-        a[i][j] = 1;
-      } else {
-        a [i][j] = 0;
+    if (M[i][i] == 0) {
+      return false;
+    }
+    for (int j{i+1}; j < n; j++) {
+      for (int z{i+1}; z < m; z++) {
+        M[j][z] = M[i][i] * M[j][z] - M[j][i] * M[i][z];
       }
     }
-  }
-}
-
-void fillIdentityEq(double **&a, double *&y, int &n, int &m) {
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      if (i == j) {
-        a[i][j] = 1;
-      } else {
-        a [i][j] = 0;
-      }
+    for (int j{i + 1}; j < n; j++) {
+      M[j][i] = 0;
     }
-    y[i] = 0;
-  }
-}
-
-void PrintMatrix(double **&matrix, int &n, int &m) {
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      cout << matrix[i][j] << "\t";
-    }
-    cout << endl << endl;
-  }
-}
-
-void PrintTheEquation(double **&matrix,double *&y, int &n, int &m) { 
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < m; j++) {
-      cout << matrix[i][j] << "*x" << j;
-      if (j < m - 1)
-        cout << " + ";
-    }
-    cout << " = " << y[i] << endl;
-  }
-  cout << endl;
-}
-
-void PrintArr(double *&a, int &n) {
-  for (int i{0}; i < n; i++) {
-    cout << "x" << i << " = " << a[i] << endl;
-  }
-}
-
-void FillTheEquation(double **&matrix, double *&y, int &n, int &m) {
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      cout <<  "A" << i + 1 << j + 1 << " = "; cin >> matrix[i][j];
-      cout << endl; 
-    }
-    cout << "B" << i + 1 << " = "; cin >> y[i]; cout << endl;
-  }
-}
-
-void FillTheEquationRandom(double **&matrix, double *&y, int &n, int &m) {
-  srand(time(0));
-  for (int i = 0; i<n; i++) {
-    for (int j = 0; j<m; j++) {
-      matrix[i][j] = rand()%10-2;
-       
-    }
-     y[i] = rand()%10-2;
-  }
-}
-
-void DelMatrix(double **&matrix, int &n) {
-
-  for (int i = 0; i<n; i++) {
-    delete[]matrix[i];
-  }
-  delete[] matrix;
-  matrix = NULL;
-}
-
-void DelArray(double *&y) {
-  delete[] y;
-  y = NULL;
-}
-
-int Maxi(double **&matrix, int &n, int&m, int k) {
-  /*Эта функция находит индекс строки с максимальным элементом, внутри одного столбца*/
-  double maxi = matrix[k][k]; int index{k};
-   for (int i = k; i < n; i++) {
-     if ( matrix[i][k] > maxi) {
-       maxi = matrix[i][k];
-       index = i;
-     }
-   }
-   //cout << "maxi = " << maxi << endl;
-   //cout << "index = " << index << endl;
-  return index;
-}
-
-void Permutation(double **&matrix, int &n, int &m, int k, int index) {
-   
-  double t;
-  for (int i{0}; i < n; i++) {
-    t = matrix[k][i];
-    matrix[k][i] = matrix[index][i];
-    matrix[index][i] = t;
   }
   
+  return true;
 }
 
-void NormizeEq(double **&a, double *&y, int &n, int &m, int k) {
-
-  for (int i = k; i<n; i++) {
-    double t = a[i][k];
-    if (fabs(t) < 0.00001) continue;
-    for (int j{0}; j < m; j++) {
-      a[i][j] = a[i][j] / t ;
-    }
-    y[i] = y[i] / t;
-    if (i == k) continue;
-    for (int j{0}; j < m; j++) {
-      a[i][j] -= a[k][j];
-    }
-    y[i] -= y[k];
-  }
-}
-
-void Normize(double **&a, int &n, int&m, int k) {
-  for (int i = k; i<n; i++) {
-    double t = a[i][k];
-    if (fabs(t) < 0.00001) continue;
-    for (int j{0}; j < m; j++) {
-      a[i][j] = a[i][j] / t ;
-    }
-    if (i == k) continue;
-    for (int j{0}; j < m; j++) {
-      a[i][j] -= a[k][j];
-    }
-  }
-}
-
-void Reverse(double **&a, double *&y, double *&x, int &n, int &m, int k) {
-  for (k = m - 1; k >= 0; k--)
+bool solutionCreation(double **&M, double *&x, int &n, int &m, double &det) {
+  double result = 0;
+  if (!currentMinorMethod(M, n, m, det)) return false;
+  for(int i = n - 1; i >= 0; i--)
   {
-    x[k] = y[k];
-    for (int i = 0; i < k; i++)
-      y[i] = y[i] - a[i][k] * x[k];
+    result = 0;
+    for(int j = i + 1; j <= n - 1; j++)
+      result = result - x[j] * M[i][j];
+    result += M[i][n];
+    x[i] = result / M[i][i];
   }
+  return true;
+}
+
+void testMenu(double **&M, int &n, int &m){
+  int key;
   
-}
-
-void Gauss(double **&a, double *&y, int &n, int &m) {
-  int k{0};
-  int index;
-  double t;
-  while(k < n) {
-    //Находим строку с максимальным элементом в текущем столбце
-    index = Maxi(a, n, m, k);
-    // Совершаем перестановку строк
-    Permutation(a, n, m, k, index);
-    // Отдельная перестановка y;
-    t = y[k];
-    y[k] = y[index];
-    y[index] = t;
-    // Норируем ур-е
-    NormizeEq(a, y, n, m, k);
-    k++;
-  }
-  double *x = CreateArray(m);
-  Reverse(a, y, x, n, m, k);
-  PrintArr(x, m);
-  DelArray(x);
+    cout << "\t\t\t" << 
+    "---TEST_MENU---" << 
+    endl << endl;
+    cout << " ---------------- " <<endl;
+    cout << " 1 - Test matrix" << endl;
+    cout << " 2 - Random matrix" << endl;
+    cout << " 3 - Identity matrix" << endl;
+    cout << " 4 - Null matrix" << endl;
+    cout << " 5 - Hilbert matrix" << endl;
+    cout << " 6 - Enter matrix" << endl;
+    cout << " 0 - Escape" << endl;
+    cout << " ---------------- " << endl;
   
-}
+    cin >> key;
+    cout << endl;
+    switch(key) {
+      case 1: {
+        ifstream data ("data");
 
-void Determenant(double **&a, int &n, int &m) {
-  int k{0};
-  int index;
-  double t;
-  while(k < n) {
-    //Находим строку с максимальным элементом в текущем столбце
-    index = Maxi(a, n, m, k);
-    // Совершаем перестановку строк
-    Permutation(a, n, m, k, index);
-    // Отдельная перестановка y;
-    // Норируем ур-е
-    Normize(a, n, m, k);
-    k++;
-  }
-  PrintMatrix(a, n, m);
-  double Det = 1;
-  for (int i{0}; i < n; i++) {
-    for (int j{0}; j < m; j ++) {
-      if (i == j) { 
-        Det *= a[i][j];
-      }
-    }
-  }
-  cout << "Determenant = " << Det << endl;
-}
-
-void task1() {
-  int key;  
-
-    do {
-        cout << " ---------------- " <<endl;
-        cout << " 1 - Enter matrix" << endl;
-        cout << " 2 - Test matrix" << endl;
-        cout << " 3 - Random matrix" << endl;
-        cout << " 4 - Identity matrix" << endl;
-        cout << " 5 - ..." << endl;
-        cout << " 6 - Hilbert's matrix" << endl;
-        cout << " 0 - Escape" << endl;
-        cout << " ---------------- " << endl;
-
-        cin >> key;
-
-        switch (key)
-        {
-            case 1:{
-              int n, m;
-              cout << "Enter number of lines";
-              n = GetN();
-              cout << "Enter number of columns";
-              m = GetN();
-              double **matrix = CreateMatrix(n, m);
-              double *y = CreateArray(n);
-              FillTheEquation(matrix,y, n, m);
-              PrintTheEquation(matrix, y, n, m);
-              Gauss(matrix, y, n, m);
-              DelArray(y);
-              DelMatrix(matrix, n);
-            } ;  break;
-
-            case 2: cout << "dev" << endl;  break;
-
-            case 3:{
-              int n, m;
-              cout << "Enter number of lines";
-              n = GetN();
-              cout << "Enter number of columns";
-              m = GetN();
-              double **matrix = CreateMatrix(n, m);
-              double *y = CreateArray(n);
-              FillTheEquationRandom(matrix,y, n, m);
-              PrintTheEquation(matrix, y, n, m);
-              Gauss(matrix, y, n, m);
-              DelArray(y);
-              DelMatrix(matrix, n);
-            };  break;
-
-            case 4: {
-              int n, m;
-              cout << "Enter number of lines";
-              n = GetN();
-              cout << "Enter number of columns";
-              m = GetN();
-              double **matrix = CreateMatrix(n, m);
-              double *y = CreateArray(n);
-              fillIdentityEq(matrix,y, n, m);
-              PrintTheEquation(matrix, y, n, m);
-              Gauss(matrix, y, n, m);
-              DelArray(y);
-              DelMatrix(matrix, n);
-            } ;  break;
-
-            case 5: cout << "dev" ;  break;
-            case 6: cout << "dev" ;  break;
-        case 0:cout << "'ll see ya" << endl; return;
-        default:cout << "!!!Error, try again... " << endl; break;
+        for (int i{}; i < n; i++) {
+          for (int j{}; j < m; j++) {
+            data >> M[i][j];
+          }
         }
-    } while (key);
+        data.close();
+        break;
+      }
+    
+      case 2: {
+        double a,b;
+        srand(time(0));
+        a = -10;
+        b = 10;
+        for(int i = 0; i < n; i++)
+          for(int j = 0; j < m; j++) {
+            M[i][j] = a + ((double) rand() / RAND_MAX) * (b - a);
+          }
+        break;
+      }
+
+      case 3: {
+        for(int i = 0; i < n; i++)
+          for(int j = 0; j < m; j++)
+            if (i == j) M[i][j] = 1;
+            else M[i][j] = 0;
+        break;
+      }
+
+      case 4: {
+        for(int i = 0; i < n; i++)
+          for(int j = 0; j < m; j++)
+            M[i][j] = 0;
+        break;
+      }
+
+      case 5: {
+        for(int i = 0; i < n; i++)
+          for(int j = 0; j < m; j++)
+            M[i][j] = 1. / (i + j + 1);
+        break;
+      }
+
+      case 6 :{
+        fillMatrix(M, n, m);
+        break;
+      }
+
+      case 0: {
+        cout << "Testing completed" << endl;
+        break;
+      }
+      default : cout << "Error... Try again." << endl;
+
+    }
+}
+
+double determinant(double **&M, int &n, int &m, double det) {
+  for(int i = 0; i < n; i++) {
+    if (M[i][i] == 0) {
+      return 0;
+    }
+    det *= M[i][i] / pow(M[i][i], n - 1 - i);
+  }
+  return det;
 }
