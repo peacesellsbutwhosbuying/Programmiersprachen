@@ -43,4 +43,14 @@ void fillMatrix(double **&M, int &n, int &m) {
   cout << endl << endl;
 }
 
+double **copyMatrix(double **&M, int &n, int &m) {
+  double **A = createMatrix(n, m);
+  for (int i{}; i < n; i++) {
+    for (int j{}; j < m; j++) {
+      A[i][j] = M[i][j];
+    }
+  }
+  return A;
+}
+
 #endif

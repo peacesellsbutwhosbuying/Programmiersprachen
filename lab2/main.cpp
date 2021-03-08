@@ -16,31 +16,11 @@ bool currentMinorMethod(double **&, int &, int &, double &);
 bool solutionCreation(double **&, double *&, int &, int &, double &);
 void testMenu(double **&, int &, int &);
 double determinant(double **&, int &, int &, double);
+bool inverseMatrix(double **&, double **&,  int &, int &, double &det);
+void selectTask();
 
 int main() {
-  cout << "Enter matrix size";
-  int n;
-  n = getNum();
-  int m;
-  m = n + 1;
-  double det{1};
-  double **M = createMatrix(n, m);
-  double *x = createArray(n);
-  testMenu(M, n, m);
-  printMatrix(M, n, m);
-  if (solutionCreation(M, x, n, m, det)) {
-    printArray(x, n);
-  } 
-  else {
-    cout << "U GAY" << endl;
-  }
-  printMatrix(M, n, m);
-  
-  det = determinant(M, n, m, det);
-  cout << "DET = " << det << endl;
-
-  deleteArray(x);
-  deleteMatrix(M, n);
+  selectTask();
 }
 
 int getNum() {
@@ -143,32 +123,47 @@ void testMenu(double **&M, int &n, int &m){
         srand(time(0));
         a = -10;
         b = 10;
-        for(int i = 0; i < n; i++)
+        for(int i = 0; i < n; i++) {
           for(int j = 0; j < m; j++) {
             M[i][j] = a + ((double) rand() / RAND_MAX) * (b - a);
           }
+        }
         break;
       }
 
       case 3: {
+        srand(time(0));
         for(int i = 0; i < n; i++)
           for(int j = 0; j < m; j++)
-            if (i == j) M[i][j] = 1;
-            else M[i][j] = 0;
+            if (j == m - 1) {
+              M[i][j] = rand()%10-2;
+            }
+            else{
+              if (i == j) {
+                M[i][j] = 1;
+              }
+              else {
+                M[i][j] = 0;
+              }
+            }
         break;
       }
 
       case 4: {
-        for(int i = 0; i < n; i++)
-          for(int j = 0; j < m; j++)
+        for(int i = 0; i < n; i++) {
+          for(int j = 0; j < m; j++) {
             M[i][j] = 0;
+          }
+        }
         break;
       }
 
       case 5: {
-        for(int i = 0; i < n; i++)
-          for(int j = 0; j < m; j++)
+        for(int i = 0; i < n; i++) {
+          for(int j = 0; j < m; j++) {
             M[i][j] = 1. / (i + j + 1);
+          }
+        }
         break;
       }
 
@@ -179,7 +174,7 @@ void testMenu(double **&M, int &n, int &m){
 
       case 0: {
         cout << "Testing completed" << endl;
-        break;
+        return;
       }
       default : cout << "Error... Try again." << endl;
 
@@ -191,7 +186,136 @@ double determinant(double **&M, int &n, int &m, double det) {
     if (M[i][i] == 0) {
       return 0;
     }
-    det *= M[i][i] / pow(M[i][i], n - 1 - i);
+    det *= M[i][i] / pow(M[i][i], n - i - 1);
+    cout << M[i][i] << " / " << pow(M[i][i], n - 1 -i) << endl;
+    cout << n - 1 - i << endl;
   }
   return det;
+}
+
+bool inverseMatrix(double **&M, double **&R, int &n, int &m, double &det) {
+  
+  double *x = new double [n];
+  for(int i{}; i < n; i++)
+  {
+    double **C = copyMatrix(M, n, m);
+    for(int j = 0; j < n; j++)
+    {
+      if (i == j) C[j][m - 1] = 1;
+      else C[j][m - 1] = 0;
+    }
+    if (!solutionCreation(C, x, n, m, det)) {
+      return false;
+    }
+    for(int j = 0; j < n; j++)
+      R[j][i] = x[j];
+    deleteMatrix(C, n);
+  }
+  delete [] x;
+  x = NULL;
+  return true;
+}
+
+void selectTask() {
+  int key; 
+
+    do {
+        cout << " ---------------- " <<endl;
+        cout << " 1 - Equation solution" << endl;
+        cout << " 2 - Determinant" << endl;
+        cout << " 3 - Inverse matrix" << endl;
+        cout << " 0 - Escape" << endl;
+        cout << " ---------------- " << endl;
+
+        cin >> key;
+
+        switch (key)
+        {
+            case 1: {
+              cout << "Enter matrix size";
+              int n;
+              n = getNum();
+              int m;
+              m = n + 1;
+              double det{1};
+              double **M = createMatrix(n, m);
+              double *x = createArray(n);
+              testMenu(M, n, m);
+              printMatrix(M, n, m);
+              if (solutionCreation(M, x, n, m, det)) {
+                cout << "\t\tSolution:" << endl;
+                printArray(x, n);
+              } 
+              else {
+                cout << "No solution!" << endl;
+              }
+              deleteArray(x);
+              deleteMatrix(M, n);
+              break;
+            }
+
+            case 2: {
+              cout << "Enter matrix size";
+              int n;
+              n = getNum();
+              int m;
+              m = n + 1;
+              double det{1};
+              double **M = createMatrix(n, m);
+
+              double *x = createArray(n);
+              testMenu(M, n, m);
+              printMatrix(M, n, m);
+
+              solutionCreation(M, x, n, m, det);
+              
+              det = determinant(M, n, m, det);
+              cout << "DETERMINANT = " << det << endl;
+              
+              deleteArray(x);
+              deleteMatrix(M, n);
+              break;
+            }
+            case 3: {
+              cout << "Enter matrix size";
+              int n;
+              n = getNum();
+              int m;
+              m = n + 1;
+              double det{1};
+
+              double **M = createMatrix(n, m);
+              double *x = createArray(n);
+              testMenu(M, n, m);
+
+              double **A = copyMatrix(M, n, m);
+
+              solutionCreation(M, x, n, m, det);
+
+              double **I = createMatrix(n, n);
+              if (determinant(M, n, m, det) != 0) {
+                if (inverseMatrix(A, I, n, m, det)) {
+                  cout << "Inverse matrix:" << endl;
+                  printMatrix(I, n, n);
+                }
+                else {
+                  cout << "No inverse matrix" << endl;
+                }
+              }
+              else {
+                cout << "No inverse matrix" << endl;
+              }
+
+              deleteArray(x);
+              deleteMatrix(I, n);
+              deleteMatrix(A, n);
+              deleteMatrix(M, n);
+              break;
+            }
+        case 0:cout << "'ll see ya" << endl; return;
+        default:cout << "!!!Error, try again... " << endl; break;
+        }
+    } while (key);
+    
+  
 }
