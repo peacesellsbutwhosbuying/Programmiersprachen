@@ -3,17 +3,23 @@
 #include <ctime>
 #include <fstream>
 #include <math.h>
-#include "array.h"
-#include "matrix.h"
-
 
 using namespace std;
 
 /*functions*/
+double **createMatrix(int , int );
+void printMatrix(double **&, int &, int &);
+void deleteMatrix(double **&, int &);
+void fillMatrix(double **&, int &, int &);
+double **copyMatrix(double **&, int &, int &);
+double *createArray(int );
+void printArray(double *&, int &);
+void deleteArray(double *&);
+void fillArray(double *&, int &);
 int getNum();
-void permutation(double **&M, int &n, int &m, int k, double &);
-bool currentMinorMethod(double **&, int &, int &, double &);
-bool solutionCreation(double **&, double *&, int &, int &, double &);
+void permutation(double **&, int &, int &, int);
+bool triangularMatrix(double **&, int &, int &);
+bool solutionCreation(double **&, double *&, int &, int &);
 void testMenu(double **&, int &, int &);
 double determinant(double **&, int &, int &, double);
 bool inverseMatrix(double **&, double **&,  int &, int &, double &det);
@@ -21,6 +27,79 @@ void selectTask();
 
 int main() {
   selectTask();
+}
+
+double *createArray(int n) {
+  double *x;
+  x = new double [n];
+  return x;
+}
+
+void printArray(double *&x, int &n) {
+  for (int i{}; i < n; i++) {
+    cout << "x" << i << " = " << x[i];
+    cout << endl;
+  }
+  cout << endl;
+}
+
+void deleteArray(double *&x) {
+  delete [] x;
+}
+
+void fillArray(double *&x, int &n) {
+  for (int i{}; i < n; i++) {
+    cout << "x" << i << " = ";
+    cin >> x[i];
+  }
+}
+
+double **createMatrix(int n, int m) {
+  double **M;
+  M = new double*[n];
+  for (int i{}; i < n; i ++) {
+    M[i] = new double [m];
+  }
+  return M;
+}
+
+void printMatrix(double **&M, int &n, int &m) {
+  for (int i = 0; i<n; i++) {
+    for (int j = 0; j<m; j++) {
+      cout << M[i][j] << "\t";
+    }
+    cout << endl << endl;
+  }
+  cout << endl;
+}
+
+void deleteMatrix(double **&M, int &n) {
+  for (int i = 0; i<n; i++) {
+    delete[]M[i];
+  }
+  delete[] M;
+  M = NULL;
+}
+
+void fillMatrix(double **&M, int &n, int &m) {
+  for (int i{}; i < n; i++) {
+    for (int j{}; j < m; j ++) {
+      cout << "A" << i + 1 << j + 1 << " = ";
+      cin >> M[i][j];
+    }
+    cout << endl;
+  }
+  cout << endl << endl;
+}
+
+double **copyMatrix(double **&M, int &n, int &m) {
+  double **A = createMatrix(n, m);
+  for (int i{}; i < n; i++) {
+    for (int j{}; j < m; j++) {
+      A[i][j] = M[i][j];
+    }
+  }
+  return A;
 }
 
 int getNum() {
@@ -38,7 +117,7 @@ int getNum() {
   return n;
 }
 
-void permutation(double **&M, int &n, int &m, int k, double &det) {
+void permutation(double **&M, int &n, int &m, int k) {
   for (int i{k+1}; i < n; i++) {
     if (M[i][k] != 0) {
       for (int j{}; j < m; j++) {
@@ -46,36 +125,38 @@ void permutation(double **&M, int &n, int &m, int k, double &det) {
         M[k][j] = M[i][j];
         M[i][j] = t;
       }
-      det *= -1;
+      
       break;
     }
   }  
 }
 
-bool currentMinorMethod(double **&M, int &n, int &m, double &det) {
+bool triangularMatrix(double **&M, int &n, int &m) {
   for (int i{}; i < n; i++) {
     if (M[i][i] == 0) {
-      permutation(M, n, m, i, det);
+      permutation(M, n, m, i);
     }
     if (M[i][i] == 0) {
       return false;
     }
-    for (int j{i+1}; j < n; j++) {
-      for (int z{i+1}; z < m; z++) {
-        M[j][z] = M[i][i] * M[j][z] - M[j][i] * M[i][z];
+    double K;
+    for (int k = 0; k < n; k++) {
+      for (int i = k + 1; i < n; i++) {
+        K = -1. * M[i][k] / M[k][k];
+        for (int j = k; j < n+1; j++) {
+          M[i][j] = M[i][j] + M[k][j] * K;
+        }
       }
     }
-    for (int j{i + 1}; j < n; j++) {
-      M[j][i] = 0;
-    }
   }
+  printMatrix(M, n, m);
   
   return true;
 }
 
-bool solutionCreation(double **&M, double *&x, int &n, int &m, double &det) {
+bool solutionCreation(double **&M, double *&x, int &n, int &m) {
   double result = 0;
-  if (!currentMinorMethod(M, n, m, det)) return false;
+  if (!triangularMatrix(M, n, m)) return false;
   for(int i = n - 1; i >= 0; i--)
   {
     result = 0;
@@ -186,14 +267,12 @@ double determinant(double **&M, int &n, int &m, double det) {
     if (M[i][i] == 0) {
       return 0;
     }
-    det *= M[i][i] / pow(M[i][i], n - i - 1);
-    cout << M[i][i] << " / " << pow(M[i][i], n - 1 -i) << endl;
-    cout << n - 1 - i << endl;
+    det *= M[i][i] ;
   }
   return det;
 }
 
-bool inverseMatrix(double **&M, double **&R, int &n, int &m, double &det) {
+bool inverseMatrix(double **&M, double **&R, int &n, int &m) {
   
   double *x = new double [n];
   for(int i{}; i < n; i++)
@@ -204,7 +283,7 @@ bool inverseMatrix(double **&M, double **&R, int &n, int &m, double &det) {
       if (i == j) C[j][m - 1] = 1;
       else C[j][m - 1] = 0;
     }
-    if (!solutionCreation(C, x, n, m, det)) {
+    if (!solutionCreation(C, x, n, m)) {
       return false;
     }
     for(int j = 0; j < n; j++)
@@ -237,12 +316,11 @@ void selectTask() {
               n = getNum();
               int m;
               m = n + 1;
-              double det{1};
               double **M = createMatrix(n, m);
               double *x = createArray(n);
               testMenu(M, n, m);
               printMatrix(M, n, m);
-              if (solutionCreation(M, x, n, m, det)) {
+              if (solutionCreation(M, x, n, m)) {
                 cout << "\t\tSolution:" << endl;
                 printArray(x, n);
               } 
@@ -267,7 +345,7 @@ void selectTask() {
               testMenu(M, n, m);
               printMatrix(M, n, m);
 
-              solutionCreation(M, x, n, m, det);
+              solutionCreation(M, x, n, m);
               
               det = determinant(M, n, m, det);
               cout << "DETERMINANT = " << det << endl;
@@ -290,11 +368,11 @@ void selectTask() {
 
               double **A = copyMatrix(M, n, m);
 
-              solutionCreation(M, x, n, m, det);
+              solutionCreation(M, x, n, m);
 
               double **I = createMatrix(n, n);
               if (determinant(M, n, m, det) != 0) {
-                if (inverseMatrix(A, I, n, m, det)) {
+                if (inverseMatrix(A, I, n, m)) {
                   cout << "Inverse matrix:" << endl;
                   printMatrix(I, n, n);
                 }
