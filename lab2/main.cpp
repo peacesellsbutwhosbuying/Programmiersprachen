@@ -22,8 +22,9 @@ bool triangularMatrix(double **&, int &, int &);
 bool solutionCreation(double **&, double *&, int &, int &);
 void testMenu(double **&, int &, int &);
 double determinant(double **&, int &, int &, double);
-bool inverseMatrix(double **&, double **&,  int &, int &, double &det);
+bool inverseMatrix(double **&, double **&,  int &, int &, double &);
 void selectTask();
+void dCalculation(double *&, double **&, int &, int &);
 
 int main() {
   selectTask();
@@ -274,7 +275,7 @@ double determinant(double **&M, int &n, int &m, double det) {
 
 bool inverseMatrix(double **&M, double **&R, int &n, int &m) {
   
-  double *x = new double [n];
+  double *x = createArray(n);
   for(int i{}; i < n; i++)
   {
     double **C = copyMatrix(M, n, m);
@@ -293,6 +294,21 @@ bool inverseMatrix(double **&M, double **&R, int &n, int &m) {
   delete [] x;
   x = NULL;
   return true;
+}
+
+void dCalculation(double *&x, double **&A, int &n) {
+  long double delta = 0;
+  long double d;
+  for(int i = 0; i < n; i++) {
+    d = 0;
+    for(int j = 0; j < n; j++)
+      d += A[i][j] * x[j];
+    if (delta < fabs(A[i][n] - d)){
+      delta = fabs(A[i][n] - d);
+
+    }
+  }
+  cout << "Delta = " << delta << endl;
 }
 
 void selectTask() {
@@ -319,16 +335,19 @@ void selectTask() {
               double **M = createMatrix(n, m);
               double *x = createArray(n);
               testMenu(M, n, m);
-              printMatrix(M, n, m);
+              double **A = copyMatrix(M, n, m);
+              printMatrix(A, n, m);
               if (solutionCreation(M, x, n, m)) {
                 cout << "\t\tSolution:" << endl;
                 printArray(x, n);
+                dCalculation(x, A, n);
               } 
               else {
                 cout << "No solution!" << endl;
               }
               deleteArray(x);
               deleteMatrix(M, n);
+              deleteMatrix(A, n);
               break;
             }
 
@@ -340,9 +359,10 @@ void selectTask() {
               m = n + 1;
               double det{1};
               double **M = createMatrix(n, m);
-
+              
               double *x = createArray(n);
               testMenu(M, n, m);
+              
               printMatrix(M, n, m);
 
               solutionCreation(M, x, n, m);
