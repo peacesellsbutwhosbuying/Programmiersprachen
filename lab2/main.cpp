@@ -3,6 +3,7 @@
 #include <ctime>
 #include <fstream>
 #include <math.h>
+#include <iomanip>
 
 using namespace std;
 
@@ -67,7 +68,7 @@ double **createMatrix(int n, int m) {
 void printMatrix(double **&M, int &n, int &m) {
   for (int i = 0; i<n; i++) {
     for (int j = 0; j<m; j++) {
-      cout << M[i][j] << "\t";
+      cout << setw(11) << M[i][j];
     }
     cout << endl << endl;
   }
@@ -276,11 +277,9 @@ double determinant(double **&M, int &n, int &m, double det) {
 bool inverseMatrix(double **&M, double **&R, int &n, int &m) {
   
   double *x = createArray(n);
-  for(int i{}; i < n; i++)
-  {
+  for(int i{}; i < n; i++) {
     double **C = copyMatrix(M, n, m);
-    for(int j = 0; j < n; j++)
-    {
+    for(int j = 0; j < n; j++) {
       if (i == j) C[j][m - 1] = 1;
       else C[j][m - 1] = 0;
     }
@@ -291,6 +290,21 @@ bool inverseMatrix(double **&M, double **&R, int &n, int &m) {
       R[j][i] = x[j];
     deleteMatrix(C, n);
   }
+  /*double **I = copyMatrix(M, n, m);
+  double **RES = createMatrix(n, n);
+  for (int i{}; i < n; i++) {
+    for (int j{}; j < n; j++) {
+      double s = 0;
+      for (int k = 0; k < n; k++) {
+        s+= I[i][j] *  R[k][j];
+      }
+      RES[i][j] = s;
+      }
+  }*/
+  //printMatrix(RES, n, n);
+  //deleteMatrix(I, n);
+  //deleteMatrix(RES, n);
+
   delete [] x;
   x = NULL;
   return true;
@@ -391,6 +405,8 @@ void selectTask() {
               solutionCreation(M, x, n, m);
 
               double **I = createMatrix(n, n);
+              
+              //det = determinant(M, n, m, det);
               if (determinant(M, n, m, det) != 0) {
                 if (inverseMatrix(A, I, n, m)) {
                   cout << "Inverse matrix:" << endl;
