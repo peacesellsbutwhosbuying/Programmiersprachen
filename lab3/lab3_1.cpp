@@ -39,8 +39,6 @@ int main() {
     }
   } while (key);
 
-  viewCart(data, balls);
-  balls.info();
 }
 
 void readFile(Ball &data, Stack &S) {

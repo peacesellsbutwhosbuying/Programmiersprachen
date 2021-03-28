@@ -15,6 +15,8 @@ struct Queue {
 
   Node *first = NULL;
   int count;
+  double fullPrice = 0;
+  double profit = 0;
   bool push(Product);
   bool pop(Product &);
   void info();
