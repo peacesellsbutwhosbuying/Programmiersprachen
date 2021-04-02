@@ -68,56 +68,61 @@ void addBall(Ball &data, Stack &balls) {
 }
 
 void removeBall(Ball &data, Stack &balls) {
-  Stack tempStack;
-  Ball tempData;
-
-  std::cout << "Enter ball specifications: " << std::endl;
-  std::cout << "Manufacturer --> ";
-  std::cin >> tempData.man;
-  std::cout << "Sport type --> ";
-  std::cin >> tempData.sportType;
-  std::cout << "Color --> ";
-  std::cin >> tempData.color;
-  std::cout << "Size --> ";
-  std::cin >> tempData.size;
-
-  bool flag = false;
-
-  while (balls.count) {
-    balls.pop(data);
-    
-    if (data.man != tempData.man || data.sportType != tempData.sportType ||
-    data.color != tempData.color || data.size != tempData.size) {
-      tempStack.push(data);
-    }
-    else {
-      std::cout << "Ball is removed" << std::endl;
-      flag = true;
-    }
-  }
-
-  if(flag) {
-    while (tempStack.count) {
-      tempStack.pop(data);
-      balls.push(data);
-    } 
-  }
-  else {
-    std::cout << "No such ball found" << std::endl;
-  }
-}
-
-void clearStack(Ball &data, Stack &balls) {
   if (balls.count) {
+    Stack tempStack;
+    Ball tempData;
+
+    std::cout << "Enter ball specifications: " << std::endl;
+    std::cout << "Manufacturer --> ";
+    std::cin >> tempData.man;
+    std::cout << "Sport type --> ";
+    std::cin >> tempData.sportType;
+    std::cout << "Color --> ";
+    std::cin >> tempData.color;
+    std::cout << "Size --> ";
+    std::cin >> tempData.size;
+
+    bool flag = false;
+
     while (balls.count) {
-      balls.pop(data);
+      balls.pop(tempData);
+      
+      if (data.man != tempData.man || data.sportType != tempData.sportType ||
+      data.color != tempData.color || data.size != tempData.size) {
+        tempStack.push(tempData);
+      }
+      else {
+        std::cout << "Ball is removed" << std::endl;
+        flag = true;
+        break;
+      }
     }
-    std::cout << "Now cart is empty" << std::endl;
-  } 
+
+    if(!flag) std::cout << "No such ball found" << std::endl;
+    
+    while (tempStack.count) {
+      tempStack.pop(tempData);
+      balls.push(tempData);
+    }
+  }
   else {
-    std::cout << "Cart is already empty!" << std::endl; 
+    std::cout << "The cart is empty!" << std::endl;
   }
 }
+
+  void clearStack(Ball &data, Stack &balls) {
+    if (balls.count) {
+      while (balls.count) {
+        balls.pop(data);
+      }
+      std::cout << "Now cart is empty" << std::endl;
+    } 
+    else {
+      std::cout << "Cart is already empty!" << std::endl; 
+    }
+  }
+  
+
 
 void viewCart (Ball &data, Stack &balls) {
   Stack tempStack;

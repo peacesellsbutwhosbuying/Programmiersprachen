@@ -12,11 +12,11 @@ struct Ball {
 
 struct Stack {
   struct Node {
-    Ball data;
     Node *prev;
+    Ball data;
   };
   Node *top = NULL;
-  int count;
+  int count = 0;
   bool push(Ball);
   bool pop(Ball &);
   void info();

@@ -3,46 +3,30 @@
 
 using namespace std;
 
-bool Stack::push(Ball d) {
-  if (!top) {
+bool Stack::push(Ball data) {
+  if (top == NULL) {
     top = new Node;
     top->prev = NULL;
-
     count = 1;
   }
-
   else {
-    Node *temp;
-    temp = new Node;
+    Node *temp = new Node;
     temp->prev = top;
     top = temp;
-
     count++;
   }
-
-  top-> data.man = d.man;
-  top->data.sportType = d.sportType;
-  top->data.color = d.color;
-  top->data.size = d.size;
-
+  top->data = data;
   return true;
 }
 
-bool Stack::pop(Ball &d) {
-  if (!top) return false;
+bool Stack::pop(Ball &data) {
+  if (top == NULL) return false;
 
-  Node *temp = top -> prev;
-
-  d.man = top->data.man;
-  d.sportType = top->data.sportType;
-  d.color = top->data.color;
-  d.size = top->data.size;
-  
+  Node *temp = top->prev;
+  data = top->data;
   delete top;
   top = temp;
-
   count--;
-
   return true;
 }
 

@@ -122,10 +122,13 @@ void saleProduct(Product &data, Queue &prod) {
     char w;
     std::cin >> w;
     if(w == 'y') {
+      
+      prod.profit += prod.first->data.amount * extraCharge;
       prod.first->data.amount = 0;
-      prod.profit += request * extraCharge;
       prod.pop(data);
-      data = prod.first->data;
+      if (prod.count) {
+        data = prod.first->data;
+      }
       std::cout << "This product group was completely sold out!" << std::endl;
     }
     else {
