@@ -52,10 +52,8 @@ void readFile(Product &data, Queue &prod) {
 }
 
 void check(Product &data, Queue &prod) {
-  if(!prod.first) {
-    std::cout << "The warehouse is empty!" << std::endl;
-  }
-  else{
+ 
+  
     Queue tempQueue;
     long tempAmount{};
     double tempPrice{};
@@ -74,7 +72,6 @@ void check(Product &data, Queue &prod) {
       tempQueue.pop(data);
       prod.push(data);
     }
-  }
 }
 
 void addProduct(Product &data, Queue &prod) {
