@@ -20,7 +20,6 @@ int main() {
     std::cout << "(1) - Add products to the warehouse" << std::endl;
     std::cout << "(2) - Sale products" << std::endl;
     std::cout << "(3) - Check the warehouse" << std::endl;
-    std::cout << "(4) - Info" << std::endl;
     std::cout << "(0) - Escape" << std::endl;
     std::cout << "------------------------------------" << std::endl;
 
@@ -32,7 +31,6 @@ int main() {
       case 1: addProduct(data, prod); break;
       case 2: saleProduct(data, prod); break;
       case 3: check(data, prod); break;
-      case 4: prod.info(); break;
       default: std::cout << "Error! Try again!" << std::endl;
       case 0: return 0;
     }
@@ -46,6 +44,7 @@ void readFile(Product &data, Queue &prod) {
   while (getline(file, line)) {
     std::istringstream fileLine(line);
     fileLine >> data.amount >> data.price;
+    prod.totalAmount += data.amount;
     prod.push(data);
   }
   file.close();
@@ -82,14 +81,14 @@ void addProduct(Product &data, Queue &prod) {
   std::cout << "New product price: "; 
   std::cin >> data.price;
   std::cout << std::endl;
-
+  prod.totalAmount += data.amount;
   prod.push(data);
 
   std::cout << "Products added" << std::endl;
 }
 
 void saleProduct(Product &data, Queue &prod) {
-  int productAmount = prod.first->data.amount;
+  int productAmount = prod.totalAmount;
   double extraCharge;
 
   std::cout << "Ammount of product for sale: " << productAmount;
@@ -113,29 +112,30 @@ void saleProduct(Product &data, Queue &prod) {
   std::cin >> request;
   std::cout << std::endl;
 
-  if (request < productAmount) {
-    prod.first->data.amount -= request;
-    prod.profit += request * extraCharge;    
+  if (request <= prod.first->data.amount) {
+    prod.profit += request * extraCharge;  
+    prod.totalAmount -= request;
+    prod.first->data.amount -= request;  
+    if (prod.first->data.amount == 0) {
+      prod.pop(data);
+    }
   } 
   else {
-    std::cout << "WARNING!" << std::endl;
-    std::cout << "You have requested a quantity equal to or greater" << 
-    " than the available quantity" << "\nAll products will be sold!" << std::endl;
-    std::cout << "->n - cancel\n->y - continue" << std::endl;
-    char w;
-    std::cin >> w;
-    if(w == 'y') {
-      
-      prod.profit += prod.first->data.amount * extraCharge;
-      prod.first->data.amount = 0;
-      prod.pop(data);
-      if (prod.count) {
-        data = prod.first->data;
-      }
-      std::cout << "This product group was completely sold out!" << std::endl;
+    if (request > prod.totalAmount) {
+      std::cout << "Error!" << std::endl;
     }
-    else {
-      std::cout << "\n\t\tThe operation was canceled.\n" << std::endl;
+    else{
+      prod.profit += prod.first->data.amount * extraCharge;
+      prod.totalAmount -= prod.first->data.amount;
+      request -= prod.first->data.amount;
+      prod.pop(data);
+      
+      prod.profit += request * extraCharge;  
+      prod.totalAmount -= request;
+      prod.first->data.amount -= request;  
+      if (prod.first->data.amount == 0) {
+        prod.pop(data);
+      }
     }
   }
 }

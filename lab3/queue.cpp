@@ -7,7 +7,6 @@ bool Queue::push(Product data) {
     first->next = NULL;
     first->data = data;
     count = 1;
-    fullPrice += data.price * data.amount;
   } 
   else {
     Node *temp = first;
@@ -18,7 +17,6 @@ bool Queue::push(Product data) {
     temp->next->data = data;
     temp->next->next = NULL;
     count++;
-    fullPrice = data.price * data.amount;
   }
   return true;
 }

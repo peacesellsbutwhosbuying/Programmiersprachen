@@ -85,11 +85,11 @@ void removeBall(Ball &data, Stack &balls) {
     bool flag = false;
 
     while (balls.count) {
-      balls.pop(tempData);
+      balls.pop(data);
       
       if (data.man != tempData.man || data.sportType != tempData.sportType ||
-      data.color != tempData.color || data.size != tempData.size) {
-        tempStack.push(tempData);
+data.color != tempData.color || data.size != tempData.size) {
+        tempStack.push(data);
       }
       else {
         std::cout << "Ball is removed" << std::endl;
@@ -101,8 +101,8 @@ void removeBall(Ball &data, Stack &balls) {
     if(!flag) std::cout << "No such ball found" << std::endl;
     
     while (tempStack.count) {
-      tempStack.pop(tempData);
-      balls.push(tempData);
+      tempStack.pop(data);
+      balls.push(data);
     }
   }
   else {
