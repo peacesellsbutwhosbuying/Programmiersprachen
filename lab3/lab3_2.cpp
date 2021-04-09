@@ -96,7 +96,13 @@ void saleProduct(Product &data, Queue &prod) {
   std::cout << std::endl;
 
   std::cout << "Enter extra charge: ";
-  std::cin >> extraCharge;
+  do{
+    std::cout << "Enter extra charge: ";
+    std::cin >> extraCharge;
+    if (extraCharge <= 0){
+      std::cout << "Extra charge is less than original price!" << std::endl;
+    }
+    } while (extraCharge <= 0);
 
   double salePrice = prod.first->data.price + extraCharge;
   std::cout << "Sale price per unit: " << salePrice;
