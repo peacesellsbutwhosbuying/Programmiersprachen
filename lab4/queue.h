@@ -21,6 +21,8 @@ struct Queue {
   double profit = 0;
   bool push(Jurnal);
   bool pop(Jurnal &);
+  void serialization(Jurnal &);
+  void deSerialization(Jurnal &);
   void info();
 };
 
