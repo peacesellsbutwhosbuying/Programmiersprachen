@@ -17,11 +17,8 @@ struct Queue {
 
   Node *first = NULL;
   int count = 0;
-  int totalAmount = 0;
-  double profit = 0;
   bool push(Jurnal);
   bool pop(Jurnal &);
-  void serialization(Jurnal &);
   void deSerialization(Jurnal &);
   void info();
 };
