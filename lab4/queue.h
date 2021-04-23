@@ -1,25 +1,31 @@
 #ifndef QUEUE_H
 #define QUEUE_H
+
 #include <stddef.h>
+#include<string>
 
 struct Jurnal {
-  int id;
+  std::string name;  
   int number;
   int year;
   double price;
+
+  void out();
 };
 
 struct Queue {
   struct Node {
-    Jurnal data;
+    char* data;
+    int n; //Seria leinght
     Node *next;
   };
 
   Node *first = NULL;
   int count = 0;
-  bool push(Jurnal);
-  bool pop(Jurnal &);
-  void deSerialization(Jurnal &);
+
+  bool push(char*, int);
+  bool pop(char* &, int &);
+  //void deSerialization();
   void info();
 };
 

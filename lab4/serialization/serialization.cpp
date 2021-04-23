@@ -2,6 +2,7 @@
 #include<sstream>
 
 void serialization(int, int, int, double);
+void clearFile();
 
 int main()
 {
@@ -29,17 +30,30 @@ void serialization(int id, int number, int year, double price)
   char *d3 = reinterpret_cast<char*>(&year);
   char *d4 = reinterpret_cast<char*>(&price);
 
-  int n = 30;//4 + 4 + 4 + 8
+  int n1 = sizeof(id);
+  int n2 = sizeof(number);
+  int n3 = sizeof(year);
+  int n4 = sizeof(price);
+  int n = n1 + n2 + n3 + n4;
 
   binData = new char[n];
 
-  for(int i{}; i < 4; i++) binData[i] = d1[i];
-  for(int i{}; i < 4; i++) binData[i + 4] = d2[i];
-  for(int i{}; i < 4; i++) binData[i + 8] = d3[i];
-  for(int i{}; i < 8; i++) binData[i + 12] = d4[i];
+  for(int i{}; i < n1; i++) binData[i] = d1[i];
+  for(int i{}; i < n2; i++) binData[i + n1] = d2[i];
+  for(int i{}; i < n3; i++) binData[i + n1 + n2] = d3[i];
+  for(int i{}; i < n4; i++) binData[i + n1 + n2 + n3] = d4[i];
+
+  //clearFile();
 
   //Зпись в файл
-  std::ofstream fileToOut("../bin_data", std::ios::binary);
-  for(int i{1}; i <= n; i++) fileToOut.write(binData, n);
+  std::fstream fileToOut("../bin_data", std::ios::out | std::ios::binary);
+  fileToOut.write((char*)&n, sizeof(int));
+  fileToOut.write(binData, n);
   fileToOut.close();
+}
+
+void clearFile()
+{
+  std::fstream clearing("../bin_data", std::ios::out | std::ios::binary);
+  clearing.close();
 }
