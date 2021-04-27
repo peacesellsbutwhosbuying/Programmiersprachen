@@ -7,21 +7,30 @@
 using std::cout;
 using std::cin;
 using std::endl;
+using std::string;
 
 void getSeria(char* &, int &, Jurnal);
 void getDeSeria(char* , int , Jurnal &);
+bool readBinaryFile(Jurnal &, Queue &);
+bool readBinaryFile1(Jurnal &, Queue &);
 
 int main()
 {
-  Jurnal j = {"mag", 12, 96, 89.4};
-  Jurnal j1;
-  j.out(); 
-  int n;
-  char* data;
-  getSeria(data, n, j);
-  getDeSeria(data, n, j1);
-  j1.out();
-  delete [] data;
+  //Jurnal j = {"mag", 12, 96, 89.4};
+  //Jurnal j1;
+  //j.out(); 
+  //int n;
+  //char* data;
+  //getSeria(data, n, j);
+  //getDeSeria(data, n, j1);
+  //j1.out();
+  //delete [] data;
+
+  Jurnal j;
+  Queue prod;
+  readBinaryFile(j, prod);
+  prod.info();
+  
 
 
   return 0;
@@ -60,9 +69,61 @@ void getSeria(char* &data, int &n, Jurnal prod)
    n5 = sizeof(double);
    size_t p = *reinterpret_cast<size_t*>(data);
    n2 = p;
-   std::string s1(data + n1_size, p);
+   string s1(data + n1_size, p);
    prod.name = s1;
    prod.number = *reinterpret_cast<int*>(data + n1_size + n2);
    prod.year = *reinterpret_cast<int*>(data + n1_size + n2 + n3);
    prod.price = *reinterpret_cast<double*>(data + n1_size + n2 + n3 + n4);
+ }
+
+ bool readBinaryFile1(Jurnal &j, Queue &prod)
+ {
+   std::fstream binaryInput("cock", std::ios::in | std::ios::binary);
+   if(!binaryInput) 
+   {
+     cout << "There's no such file :(" << endl;
+     return false;
+   }
+
+   int i{1};
+   int n;
+   string line;
+   while(getline(binaryInput, line))
+   {
+     std::istringstream binaryLine(line);
+     binaryLine >> n >> j.name >> j.number >> j.year >> j.price;
+     cout  << "n:" << n << "\nname:" << j.name << "\nnumber:" << j.number << "\nyear:" << j.year << "\np:" << j.price << endl;
+   }
+
+   binaryInput.close();
+   return true;
+ }
+
+ bool readBinaryFile(Jurnal &j, Queue &prod) 
+ {
+   std::fstream binaryInput("cock", std::ios::in | std::ios::binary);
+   if(!binaryInput) 
+   {
+     cout << "There's no such file :(" << endl;
+     return false;
+   }
+
+   int n;
+   
+   while (!binaryInput.eof())
+   {
+     if(binaryInput.read((char*)&n, sizeof(int)))
+     {
+       char* binaryData = new char[n];
+       binaryInput.read(binaryData, n);
+       getDeSeria(binaryData, n, j);
+       j.out();
+       prod.push(binaryData, n);
+       cout << "--------------------------------" << endl;
+       delete [] binaryData;
+
+     }
+   }
+   binaryInput.close();
+   return true;
  }

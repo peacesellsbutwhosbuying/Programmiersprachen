@@ -14,6 +14,7 @@ int main()
   double price; 
   clearFile();
   std::ifstream file("data");
+  std::fstream binData("../cock", std::ios::out | std::ios::binary);
     std::string line;
     char* data;
     int n;
@@ -21,12 +22,14 @@ int main()
       std::istringstream fileLine(line);
       fileLine >> name >> num >> year >> price;
       serialization(data, n, name, num, year, price);
-      makeFile(data, n);
+      binData.write((char*)&n, sizeof(int));
+      binData.write(data, n);
     }
   file.close();
+  delete [] data;
 }
 
-void serialization(char * &data, int &n, std::string name, int num, int year, double price)
+void serialization(char* &data, int &n, std::string name, int num, int year, double price)
 {
    size_t s1 = name.size();
    int n1_size = sizeof(size_t);
@@ -57,7 +60,7 @@ void clearFile()
   clearing.close();
 }
 
-void makeFile(char * data, int n)
+void makeFile(char* data, int n)
 {
   std::fstream binData("../bin_data", std::ios::out | std::ios::binary);
   binData.write((char*)&n, sizeof(int));
