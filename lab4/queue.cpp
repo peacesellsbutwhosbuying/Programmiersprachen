@@ -41,8 +41,8 @@ bool Queue::pop(char* &data, int &n)
   if (!first) return false;
 
   Node *temp = first->next;
-  //data = first->data;
   n = first->n;
+  data = new char[n];
   for(int i{}; i < n; i++)
   {
     data[i] = first->data[i];
@@ -70,7 +70,7 @@ void Queue::info() {
   }
 }
 
-void Jurnal::out()
+void Journal::out()
 {
   std::cout << "Jurnal:";
   std::cout << "\nName: " << name;

@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include<string>
 
-struct Jurnal {
+struct Journal {
   std::string name;  
   int number;
   int year;

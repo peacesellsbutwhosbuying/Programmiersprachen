@@ -10,21 +10,59 @@ using std::endl;
 using std::string;
 
 
-void getSeria(char* &, int &, Jurnal);
-void getDeSeria(char* , int , Jurnal &);
+void getSeria(char* &, int &, Journal);
+void getDeSeria(char* , int , Journal &);
 bool readBinaryFile(Queue &);
 void info(Queue);
+void addJurnal(Queue &);
+void removeJurnal(Queue &);
+void clearQueue(Queue &);
 
 int main()
 {
-  Jurnal j;
+  Journal j;
   Queue prod;
   readBinaryFile(prod);
+
+  int key;
+  
+  do
+  {
+    cout << ">----------------MENU----------------<" << endl;
+    cout << "(1) - Add journal" << endl;
+    cout << "(2) - Remove journal" << endl;
+    cout << "(3) - Clear the queue" << endl;
+    cout << "(4) - View the queue" << endl;
+    cout << "(0) - Escape" << endl;
+    cout << ">------------------------------------<" << endl;
+
+    cout << "--->";
+    cin >> key;
+    cout << endl;
+
+    switch(key) 
+    {
+      case 1: addJurnal(prod); break;
+      case 2: removeJurnal(prod); break;
+      case 3: clearQueue(prod); break;
+      case 4: info(prod); break;
+      default: cout << "Error! Try again!" << endl; break;
+      case 0: return 0;
+    }
+  } while (key);
+  
+  char* data;
+  int n;
+  while(prod.count)
+  {
+    prod.pop(data, n);
+    delete[] data;
+  }
 
   return 0;
 }
 
-void getSeria(char* &data, int &n, Jurnal prod)
+void getSeria(char* &data, int &n, Journal prod)
  {
    size_t s1 = prod.name.size();
    int n1_size = sizeof(size_t);
@@ -48,7 +86,7 @@ void getSeria(char* &data, int &n, Jurnal prod)
    for(int i{}; i <= n5; i++) data[i + n1_size + n2 + n3 + n4] = d5[i];
  }
 
- void getDeSeria(char* data, int n, Jurnal &prod)
+ void getDeSeria(char* data, int n, Journal &prod)
  {
    int n1_size, n2, n3, n4, n5;
    n1_size = sizeof(size_t);
@@ -74,7 +112,7 @@ void getSeria(char* &data, int &n, Jurnal prod)
    }
 
    int n;
-   Jurnal j;
+   Journal j;
    while (!binaryInput.eof())
    {
      if(binaryInput.read((char*)&n, sizeof(int)))
@@ -82,6 +120,7 @@ void getSeria(char* &data, int &n, Jurnal prod)
        char* binaryData = new char[n];
        binaryInput.read(binaryData, n);
        prod.push(binaryData, n);
+
        getDeSeria(binaryData, n, j);
        cout << "--------------------------------" << endl;
        j.out();
@@ -95,14 +134,103 @@ void getSeria(char* &data, int &n, Jurnal prod)
 
  void info(Queue prod)
  {
-   Jurnal j;
+   if(prod.count)
+   {
+
+   
+   Journal j;
    int n;
    getDeSeria(prod.first->data, n, j);
    cout << ">---------------------------<" << endl;
-   cout << "SIZE: " << prod.count << endl;
-   cout << "NAME: " << j.name << endl;
-   cout << "NUMBER:" << j.number << endl;
-   cout << "YEAR: " << j.year << endl;
-   cout << "PRICE: " << j.price << endl;
+   cout << "Size: " << prod.count << endl;
+   cout << "Name: " << j.name << endl;
+   cout << "Number:" << j.number << endl;
+   cout << "Year: " << j.year << endl;
+   cout << "Price: " << j.price << endl;
+   cout << ">---------------------------<" << endl;
+   }
+   else 
+   {
+     cout << "The queue is empty" << endl;
+   }
 
  }
+
+void addJurnal(Queue &prod)
+ {
+  int n;
+  Journal j;
+  char* data;
+
+  cout << "Name --> "; cin >> j.name; cout << endl;
+  cout << "Number --> "; cin >> j.number; cout << endl;
+  cout << "Year --> "; cin >> j.year; cout << endl;
+  cout << "Price --> "; cin >> j.price; cout << endl;
+
+  getSeria(data, n, j);
+
+  prod.push(data, n);
+
+  cout << "Journal is added" << endl;
+  delete[] data;
+ }
+
+void removeJurnal(Queue &prod)
+{
+  if(prod.count)
+  {
+    Journal j;
+    Journal tj;
+    Queue temp;
+    cout << "Name: "; cin >> tj.name; cout << endl;
+    cout << "Number: "; cin >> tj.number; cout << endl;
+    cout << "Year: "; cin >> tj.year; cout << endl;
+    cout << "Price: "; cin >> tj.price; cout << endl;
+    char* data;
+    int n;
+    bool flag = false;
+
+    while(prod.count)
+    {
+      prod.pop(data, n);
+      getDeSeria(data, n, j);
+      delete [] data;
+      if(j.name != tj.name || j.number != tj.number || j.year != tj.year || j.price != tj.price)
+      {
+        getSeria(data, n, j);
+        temp.push(data, n);
+      }
+      else
+      {
+        cout << "Journal is removed" << endl;
+        flag = true;
+        
+      }
+      
+    }   
+    if(!flag) cout << "No such journal was found" << endl;
+
+    while(temp.count)
+    {
+      temp.pop(data, n);
+      prod.push(data, n);
+    }
+    delete[] data;
+  }  
+  else 
+  {
+    cout << "The queue is empty" << endl;
+  }
+
+}
+
+void clearQueue(Queue &prod) {
+  char* data;
+  int n;
+  while(prod.count)
+  {
+    prod.pop(data, n);
+    delete[] data;
+  }
+  cout << "Now the queue is empty" << endl;
+}
