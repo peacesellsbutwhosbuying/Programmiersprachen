@@ -4,16 +4,6 @@
 
 bool Queue::push(char* data, int n) 
 {
-  
-  /*char* d2 = reinterpret_cast<char*>(&data.number);
-  char* d3 = reinterpret_cast<char*>(&data.year);
-  char* d4 = reinterpret_cast<char*>(&data.price);
-  char* binData = new char[30];
-  
-  for(int i{}; i < 4; i++) binData[i + 4] = d2[i];
-  for(int i{}; i < 4; i++) binData[i + 4 + 4] = d3[i];
-  for(int i{}; i < 8; i++) binData[i + 4 + 4 + 4] = d4[i];*/
-
   if (!first)
   {
     first = new Node;
@@ -29,17 +19,15 @@ bool Queue::push(char* data, int n)
   } 
   else 
   {
-    Node *temp = first;
-    while (temp->next != NULL) 
-    {
-      temp = temp->next;
-    }
+    Node *temp;
+    temp = first;
+    while (temp->next != NULL) temp = temp->next;
     temp->next = new Node;
     temp->next->data = new char[n];
     temp->next->n = n;
     for(int i{}; i < n; i++)
     {
-      first->data[i] = data[i];
+      temp->next->data[i] = data[i];
     }
     temp->next->next = NULL;
     count++;
@@ -73,11 +61,12 @@ void Queue::info() {
   }
   else {
     std::cout << "SIZE: " << count << std::endl;
-    /*std::cout << "Id:" << first->data.name << std::endl;
+    /*std::cout << "Id:" << first->data << std::endl;
     std::cout << "Number:" << first->data.number << std::endl;
     std::cout << "Year:" << first->data.year << std::endl;
-    std::cout << "FIRST PRICE: " << first->data.price << std::endl;
-    std::cout << ">----------------------<\n" << std::endl;*/
+    std::cout << "FIRST PRICE: " << first->data.price << std::endl;*/
+    std::cout << ">----------------------<\n" << std::endl;
+    
   }
 }
 

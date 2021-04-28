@@ -9,29 +9,17 @@ using std::cin;
 using std::endl;
 using std::string;
 
+
 void getSeria(char* &, int &, Jurnal);
 void getDeSeria(char* , int , Jurnal &);
-bool readBinaryFile(Jurnal &, Queue &);
-bool readBinaryFile1(Jurnal &, Queue &);
+bool readBinaryFile(Queue &);
+void info(Queue);
 
 int main()
 {
-  //Jurnal j = {"mag", 12, 96, 89.4};
-  //Jurnal j1;
-  //j.out(); 
-  //int n;
-  //char* data;
-  //getSeria(data, n, j);
-  //getDeSeria(data, n, j1);
-  //j1.out();
-  //delete [] data;
-
   Jurnal j;
   Queue prod;
-  readBinaryFile(j, prod);
-  prod.info();
-  
-
+  readBinaryFile(prod);
 
   return 0;
 }
@@ -76,32 +64,9 @@ void getSeria(char* &data, int &n, Jurnal prod)
    prod.price = *reinterpret_cast<double*>(data + n1_size + n2 + n3 + n4);
  }
 
- bool readBinaryFile1(Jurnal &j, Queue &prod)
+ bool readBinaryFile(Queue &prod) 
  {
-   std::fstream binaryInput("cock", std::ios::in | std::ios::binary);
-   if(!binaryInput) 
-   {
-     cout << "There's no such file :(" << endl;
-     return false;
-   }
-
-   int i{1};
-   int n;
-   string line;
-   while(getline(binaryInput, line))
-   {
-     std::istringstream binaryLine(line);
-     binaryLine >> n >> j.name >> j.number >> j.year >> j.price;
-     cout  << "n:" << n << "\nname:" << j.name << "\nnumber:" << j.number << "\nyear:" << j.year << "\np:" << j.price << endl;
-   }
-
-   binaryInput.close();
-   return true;
- }
-
- bool readBinaryFile(Jurnal &j, Queue &prod) 
- {
-   std::fstream binaryInput("cock", std::ios::in | std::ios::binary);
+   std::fstream binaryInput("binData", std::ios::in | std::ios::binary);
    if(!binaryInput) 
    {
      cout << "There's no such file :(" << endl;
@@ -109,21 +74,35 @@ void getSeria(char* &data, int &n, Jurnal prod)
    }
 
    int n;
-   
+   Jurnal j;
    while (!binaryInput.eof())
    {
      if(binaryInput.read((char*)&n, sizeof(int)))
      {
        char* binaryData = new char[n];
        binaryInput.read(binaryData, n);
-       getDeSeria(binaryData, n, j);
-       j.out();
        prod.push(binaryData, n);
+       getDeSeria(binaryData, n, j);
+       cout << "--------------------------------" << endl;
+       j.out();
        cout << "--------------------------------" << endl;
        delete [] binaryData;
-
      }
    }
    binaryInput.close();
    return true;
+ }
+
+ void info(Queue prod)
+ {
+   Jurnal j;
+   int n;
+   getDeSeria(prod.first->data, n, j);
+   cout << ">---------------------------<" << endl;
+   cout << "SIZE: " << prod.count << endl;
+   cout << "NAME: " << j.name << endl;
+   cout << "NUMBER:" << j.number << endl;
+   cout << "YEAR: " << j.year << endl;
+   cout << "PRICE: " << j.price << endl;
+
  }
