@@ -25,7 +25,6 @@ struct Queue {
 
   bool push(char*, int);
   bool pop(char* &, int &);
-  //void deSerialization();
   void info();
 };
 
