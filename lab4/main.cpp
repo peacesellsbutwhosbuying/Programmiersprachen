@@ -120,7 +120,7 @@ bool readBinaryFile(Queue &prod)
       char* binaryData = new char[n];
       binaryInput.read(binaryData, n);
       prod.push(binaryData, n);
-
+      //Unnecessary
       getDeSeria(binaryData, n, j);
       cout << "--------------------------------" << endl;
       j.out();
@@ -195,12 +195,13 @@ void removeJournal(Queue &prod)
             {
                 getSeria(data, n, j);
                 prod.push(data, n);
+                delete[] data;
             }
             else
             {
                 cout << "Journal is removed" << endl;
                 flag = true;
-                //break;
+                break;
             }
 
         }
