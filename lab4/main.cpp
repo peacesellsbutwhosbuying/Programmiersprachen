@@ -223,9 +223,13 @@ void removeJournal(Queue &prod)
 void clearQueue(Queue &prod) {
   char* data;
   int n;
+  Journal j;
   while(prod.count)
   {
     prod.pop(data, n);
+    getDeSeria(data, n, j);
+    j.out();
+    cout << "-------------------------------" << endl;
     delete[] data;
   }
   cout << "Now the queue is empty" << endl;
