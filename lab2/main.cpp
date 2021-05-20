@@ -104,6 +104,7 @@ double **copyMatrix(double **&M, int &n, int &m) {
   return A;
 }
 
+
 int getNum() {
   float n;
 
