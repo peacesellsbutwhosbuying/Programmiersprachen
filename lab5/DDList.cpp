@@ -142,12 +142,14 @@ void DLList::info()
         cout << "List node count: " << count << endl;
     else
         cout << "List is empty" << endl;
-    if(current == NULL)
+    //if(current == NULL)
         if(moveFirst())
+        {
             cout << "Current name: " << current->data.name << endl;
             cout << "Current age: " << current->data.age << endl;
             cout << "Current weight: " << current->data.weight << endl;
             cout << "Current hunger: " << current->data.isHungry << endl;
+        }
 }
 
 bool DLList::delFirst(Bunny &data)
