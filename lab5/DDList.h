@@ -1,12 +1,21 @@
 #ifndef DDLIST_H
 #define DDLIST_H
 #include <stddef.h>
+#include <string>
+
+struct Bunny
+{
+  std::string name;
+  int age;
+  double weight;
+  bool isHungry;
+};
 
 struct DLList
 {
     struct Node
     {
-        int data;     
+        Bunny data;     
         Node* next;   
         Node* prev;   
     };
@@ -25,16 +34,16 @@ struct DLList
     bool moveFirst();
     bool moveLast();
 
-    bool init(int);
-    bool addNext(int);
-    bool addPrev(int);
-    bool addFirst(int);
-    bool addLast(int);
+    bool init(Bunny);
+    bool addNext(Bunny);
+    bool addPrev(Bunny);
+    bool addFirst(Bunny);
+    bool addLast(Bunny);
 
-    bool del(int &);
-    bool delNext(int &);
-    bool delPrev(int &);
-    bool delFirst(int &);
-    bool delLast(int &);
+    bool del(Bunny &);
+    bool delNext(Bunny &);
+    bool delPrev(Bunny &);
+    bool delFirst(Bunny &);
+    bool delLast(Bunny &);
 };
 #endif

@@ -43,7 +43,7 @@ bool DLList::moveLast()
     return true;
 }
 
-bool DLList::init(int data)
+bool DLList::init(Bunny data)
 {
    if(first == NULL)
    {
@@ -60,7 +60,7 @@ bool DLList::init(int data)
         return false;
 }
 
-bool DLList::addNext(int data)
+bool DLList::addNext(Bunny data)
 {
 	if(first == NULL) return init(data);
 
@@ -81,7 +81,7 @@ bool DLList::addNext(int data)
 
 }
 
-bool DLList::addPrev(int data)
+bool DLList::addPrev(Bunny data)
 {
 	if(first == NULL) return init(data);
 
@@ -101,13 +101,13 @@ bool DLList::addPrev(int data)
     return true;
 }
 
-bool DLList::addFirst(int data)
+bool DLList::addFirst(Bunny data)
 {
     if (moveFirst()) return addPrev(data);
     else return false;
 }
 
-bool DLList::addLast(int data)
+bool DLList::addLast(Bunny data)
 {
     if (moveLast()) return addNext(data);
     else return false;
@@ -125,7 +125,10 @@ void DLList::out()
     cout << "List: ";
     do
     {
-       cout << temp->data <<" ";
+       cout << temp->data.name <<" ";
+       cout << temp->data.age <<" ";
+       cout << temp->data.weight <<" ";
+       cout << temp->data.isHungry <<" ";
        temp = temp->next;
     }
     while(temp);
@@ -136,17 +139,18 @@ void DLList::info()
 {
 
     if(count)
-        cout << "List node count: "
-            << count << endl;
+        cout << "List node count: " << count << endl;
     else
         cout << "List is empty" << endl;
     if(current == NULL)
         if(moveFirst())
-            cout << "Current node data = "
-                << current->data << endl;
+            cout << "Current name: " << current->data.name << endl;
+            cout << "Current age: " << current->data.age << endl;
+            cout << "Current weight: " << current->data.weight << endl;
+            cout << "Current hunger: " << current->data.isHungry << endl;
 }
 
-bool DLList::delFirst(int& data)
+bool DLList::delFirst(Bunny &data)
 {
     if(first == NULL)      return false;
     if(current != first)    moveFirst();
@@ -168,7 +172,7 @@ bool DLList::delFirst(int& data)
     return true;
 }
 
-bool DLList::delLast(int& data)
+bool DLList::delLast(Bunny &data)
 {
     if(first == NULL)      return false;
     if(current!=last)    moveLast();
@@ -191,7 +195,7 @@ bool DLList::delLast(int& data)
     return true;
 }
 
-bool DLList::del(int& data)
+bool DLList::del(Bunny &data)
 {
     if(first == NULL) return false;
 	if(current == NULL) return false;
@@ -211,14 +215,14 @@ bool DLList::del(int& data)
 	return true;
 }
 
-bool DLList::delNext(int& data)
+bool DLList::delNext(Bunny &data)
 {
     if(first == NULL) return false;
 	if(current == NULL) return false;
 	if (moveNext()) return del(data);
     return false;
 }
-bool DLList::delPrev(int& data)
+bool DLList::delPrev(Bunny &data)
 {
     if(first == NULL) return false;
 	if(current == NULL) return false;
@@ -233,6 +237,6 @@ void DLList::clear()
        cout << "List is empty" << endl;
        return;
    }
-   int k;
+   Bunny k;
    while(del(k));
 }
