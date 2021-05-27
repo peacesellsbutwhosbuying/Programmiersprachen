@@ -130,6 +130,7 @@ void DLList::out()
        cout << temp->data.weight <<" ";
        cout << temp->data.isHungry <<" ";
        temp = temp->next;
+       cout << endl;
     }
     while(temp);
     cout << endl;
@@ -219,17 +220,17 @@ bool DLList::del(Bunny &data)
 
 bool DLList::delNext(Bunny &data)
 {
-    if(first == NULL) return false;
+  if(first == NULL) return false;
 	if(current == NULL) return false;
 	if (moveNext()) return del(data);
-    return false;
+  return false;
 }
 bool DLList::delPrev(Bunny &data)
 {
-    if(first == NULL) return false;
+  if(first == NULL) return false;
 	if(current == NULL) return false;
 	if (movePrev()) return del(data);
-    return false;
+  return false;
 }
 
 void DLList::clear()
