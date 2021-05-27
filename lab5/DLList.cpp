@@ -1,5 +1,5 @@
 #include<iostream>
-#include"DDList.h"
+#include"DLList.h"
 
 using std::cout;
 using std::endl;
@@ -12,7 +12,7 @@ bool DLList::moveNext()
       current=first;
       return true;
     }
-    if(current->next) return false;
+    if(current->next == NULL) return false;
     current = current->next;
     return true;
 }
@@ -115,6 +115,7 @@ bool DLList::addLast(Bunny data)
 
 void DLList::out()
 {
+  system("clear");
     if(first == NULL)  
     {
       cout<<"List is empty"<<endl;
@@ -122,7 +123,7 @@ void DLList::out()
     }
 
     Node* temp = first;
-    cout << "List: ";
+    cout << "List: " << endl;
     do
     {
        cout << temp->data.name <<" ";

@@ -1,5 +1,5 @@
-#ifndef DDLIST_H
-#define DDLIST_H
+#ifndef DLLIST_H
+#define DLLIST_H
 #include <stddef.h>
 #include <string>
 

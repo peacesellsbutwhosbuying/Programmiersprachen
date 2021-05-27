@@ -1,4 +1,4 @@
-#include "DDList.h"
+#include "DLList.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -20,6 +20,12 @@ void removeFromTheTop(Bunny &, DLList &);
 void removeFromTheEnd(Bunny &, DLList &);
 void removeFromTheK(Bunny &, DLList &);
 
+void clearTheList(Bunny &, DLList &);
+
+void writeFile(Bunny, DLList);
+
+void sortByAge(Bunny &, DLList &);
+
 int main()
 {
   DLList S;
@@ -38,7 +44,12 @@ int main()
     std::cout << "(4) - from the top" << std::endl;
     std::cout << "(5) - from the end" << std::endl;
     std::cout << "(6) - from the k position" << std::endl;
-    std::cout << "(7) - out" << std::endl;
+    cout << "-Sort-" << endl;
+    cout << "(7) - by age" << endl;
+    cout << "-Other-" << endl;
+    std::cout << "(8) - Clear the list" << std::endl;
+    std::cout << "(9) - Write file" << std::endl;
+    std::cout << "(10) - Out" << std::endl;
     std::cout << "(0) - Escape" << std::endl;
     std::cout << "------------------------------------" << std::endl;
 
@@ -73,7 +84,10 @@ int main()
           removeFromTheK(data, S);
         }
       }; break;
-      case 7: S.out(); break;
+      case 7: sortByAge(data, S); break;
+      case 8: system("clear"); S.clear(); break;
+      case 9: writeFile(data, S); break;
+      case 10: S.out(); break;
       default: std::cout << "Error! Try again!" << std::endl;
       case 0: return 0;
     }
@@ -212,4 +226,46 @@ void removeFromTheK(Bunny &data, DLList &S)
       S.delPrev(data);
     }
   }
+}
+
+void writeFile(Bunny data, DLList S)
+{
+  system("clear");
+  if(S.count == 0)
+  {
+    cout << "Warning! The list is empty." << endl;
+  }
+  system("clear");
+  std::ofstream out("bunnyOut");
+  S.moveFirst();
+  for(int i{}; i < S.count; i++)
+  {
+    Bunny outData = S.current->data;
+    out << outData.name << " " << outData.age << " " << outData.weight << " " << outData.isHungry << endl;
+    S.moveNext();
+  }
+  out.close();
+}
+
+void sortByAge(Bunny &data, DLList &S)
+{
+  system("clear");
+
+  Bunny temp;
+
+  for(int i{}; i < S.count; i++)
+  {
+    S.moveLast();
+    for(int j{S.count - 1}; j >= (i+1); j--)
+    {
+      if(S.current->data.age < S.current->prev->data.age)
+      {
+        temp = S.current->data;
+        S.current->data = S.current->prev->data;
+        S.current->prev->data = temp;
+      }
+      S.movePrev();
+    }
+  }
+  S.out();
 }
