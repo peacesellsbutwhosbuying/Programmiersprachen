@@ -35,27 +35,27 @@ int main()
   int key;
   
   do {
-    std::cout << "----------------MENU----------------" << std::endl;
-    std::cout << "-Add bunny-:" << std::endl;
-    std::cout << "(1) - to the top" << std::endl;
-    std::cout << "(2) - to the end" << std::endl;
-    std::cout << "(3) - to the k position" << std::endl;
-    std::cout << "-Remove a bunny-" << std::endl;
-    std::cout << "(4) - from the top" << std::endl;
-    std::cout << "(5) - from the end" << std::endl;
-    std::cout << "(6) - from the k position" << std::endl;
+    cout << "----------------MENU----------------" << endl;
+    cout << "-Add bunny-:" << endl;
+    cout << "(1) - to the top" << endl;
+    cout << "(2) - to the end" << endl;
+    cout << "(3) - to the k position" << endl;
+    cout << "-Remove a bunny-" << endl;
+    cout << "(4) - from the top" << endl;
+    cout << "(5) - from the end" << endl;
+    cout << "(6) - from the k position" << endl;
     cout << "-Sort-" << endl;
     cout << "(7) - by age" << endl;
     cout << "-Other-" << endl;
-    std::cout << "(8) - Clear the list" << std::endl;
-    std::cout << "(9) - Write file" << std::endl;
-    std::cout << "(10) - Out" << std::endl;
-    std::cout << "(0) - Escape" << std::endl;
-    std::cout << "------------------------------------" << std::endl;
+    cout << "(8) - Clear the list" << endl;
+    cout << "(9) - Write file" << endl;
+    cout << "(10) - Out" << endl;
+    cout << "(0) - Escape" << endl;
+    cout << "------------------------------------" << endl;
 
-    std::cout << "--->  ";
-    std::cin >> key;
-    std::cout << std::endl;
+    cout << "--->  ";
+    cin >> key;
+    cout << endl;
 
     switch(key) {
       case 1: addToTheTop(data, S); break;
@@ -88,7 +88,7 @@ int main()
       case 8: system("clear"); S.clear(); break;
       case 9: writeFile(data, S); break;
       case 10: S.out(); break;
-      default: std::cout << "Error! Try again!" << std::endl;
+      default: cout << "Error! Try again!" << endl;
       case 0: return 0;
     }
   } while (key);
