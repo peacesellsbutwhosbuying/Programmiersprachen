@@ -12,10 +12,10 @@ int main()
   Tree* T = NULL;
   for(int i = 0; i < n; i++) 
   {
-    Add(T, mas[i]);
+    Add(&T, mas[i]);
   }
   PrintLeftRightRight(T);
   cout << endl;
-  cout << "tree size = " << GetTreeSize(T) << endl;
+  cout << "Tree size = " << GetTreeSize(T) << endl;
   return 0;
 }

@@ -30,24 +30,24 @@ int GetTreeSize(Tree* T)
   return left + right + 1;
 }
 
-void Add(Tree*& T, int data)
+void Add(Tree** T, int data)
 {
-  if(T == NULL)
+  if((*T) == NULL)
   {
-    T = new Tree;
-    T->data = data;
-    T->left = NULL;
-    T->right = NULL;
+    *T = new Tree;
+    (*T)->data = data;
+    (*T)->left = NULL;
+    (*T)->right = NULL;
     return;
   }
 
-  if(data < T->data)
+  if(data < (*T)->data)
   {
-    Add(T->left, data);
+    Add(&(*T)->left, data);
   }
   else
   {
-    Add(T->right, data);
+    Add(&(*T)->right, data);
   }
 }
 

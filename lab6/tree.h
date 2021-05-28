@@ -9,10 +9,9 @@ struct Tree
 };
 
 int GetTreeSize(Tree*);
-void Add(Tree*&, int);
+void Add(Tree**, int);
 void PrintLeftRightRight(Tree*);
 Tree* Search(Tree*&, int);
 void Delete(Tree*&);
-
 
 #endif
