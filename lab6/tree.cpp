@@ -44,10 +44,12 @@ void Add(Tree** T, int data)
   if(data < (*T)->data)
   {
     Add(&(*T)->left, data);
+    std::cout << "Left added" << std::endl;
   }
   else
   {
     Add(&(*T)->right, data);
+    std::cout << "Right added" << std::endl;
   }
 }
 
