@@ -11,9 +11,8 @@ using std::endl;
 
 
 int **ReadFile(int&);
-int FindMinDistance(int, int*, bool*);
-void Dijkstra(int, int**, int, int);
-void Path(int, int**, int, int, int *);
+void FindMinPathLenght(int, int**, int, int);
+void FindPath(int, int**, int, int, int *);
 
 int main()
 {
@@ -34,7 +33,7 @@ int main()
   cout << "Enter start point --> "; cin >> source; cout << endl;
   cout << "Enter end point --> "; cin >> dest; cout << endl;
 
-  Dijkstra(graphSize, M, source, dest);
+  FindMinPathLenght(graphSize, M, source, dest);
 
   //delete
   for (int i{}; i < graphSize; i++) 
@@ -86,23 +85,7 @@ int **ReadFile(int & graphSize)
   return M;
 }
 
-int FindMinDistance(int grapSize, int* dist, bool* visited)
-{
-  int min = INT_MAX;
-  int minIndex;
-
-  for (int i{}; i < grapSize; i++) 
-  {
-    if (visited[i] == false && dist[i] <= min) 
-    {
-      min = dist[i];
-      minIndex = i;
-    }
-  }
-  return minIndex;
-}
-
-void Dijkstra(int graphSize, int **G, int source, int dest) {
+void FindMinPathLenght(int graphSize, int **G, int source, int dest) {
   int *dist = new int[graphSize];
   bool *visited = new bool[graphSize];
 
@@ -114,7 +97,18 @@ void Dijkstra(int graphSize, int **G, int source, int dest) {
 
   for (int i{}; i < graphSize - 1; i++) 
   {
-    int u = FindMinDistance(graphSize, dist, visited);
+    int min = INT_MAX;
+    int minIndex;
+
+    for (int i{}; i < graphSize; i++) 
+    {
+      if (visited[i] == false && dist[i] <= min) 
+      {
+        min = dist[i];
+        minIndex = i;
+      }
+    }
+    int u = minIndex;
     visited[u] = true;
 
     for (int v{}; v < graphSize; v++) 
@@ -126,35 +120,37 @@ void Dijkstra(int graphSize, int **G, int source, int dest) {
     }
   }
 
-  cout << "Vertex \t\t Distance from source " << endl;
+  cout << "|V \t\t| Min path lenght from source|" << endl;
+  cout << "---------------------------------------------" << endl;
   for (int i{}; i < graphSize; i++)
   {
-    cout << i << " \t\t " << dist[i] << endl;
+    cout << "|" << i << " \t\t| " << dist[i] << "\t\t\t     |" << endl;
+    cout << "---------------------------------------------" << endl;
   }
 
-  Path(graphSize, G, source, dest, dist);
+  FindPath(graphSize, G, source, dest, dist);
 
   delete[] dist;
   delete[] visited;
 }
 
-void Path(int graphSize, int** M, int source, int dest, int *dist) 
+void FindPath(int graphSize, int** M, int source, int end, int *dist) 
 {
   std::stack<int> path;
-  path.push(dest);
+  path.push(end);
 
-  int w = dist[dest];
-  while (dest != source) 
+  int lenght = dist[end];
+  while (end != source) 
   {
     for (int i{}; i < graphSize; i++) 
     {
-      if (M[i][dest] != 0) 
+      if (M[i][end] != 0) 
       {
-        int temp = w - M[i][dest];
+        int temp = lenght - M[i][end];
           if (temp == dist[i]) 
           {
-            w = temp;
-            dest = i;
+            lenght = temp;
+            end = i;
             path.push(i);
           }
       }
