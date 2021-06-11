@@ -1,21 +1,33 @@
 #include "tree.h"
-#include "iostream"
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
 
 using std::cout;
 using std::cin;
 using std::endl;
+using std::string;
+
+void ReadFile(Tree **, Flower &);
 
 int main()
 {
-  int n = 5;
-  int mas[] = {2,5,3,4,1};
   Tree* T = NULL;
-  for(int i = 0; i < n; i++) 
-  {
-    Add(&T, mas[i]);
-  }
+  Flower data;
+  ReadFile(*T, data);
   PrintLeftRightRight(T);
-  cout << endl;
-  cout << "Tree size = " << GetTreeSize(T) << endl;
   return 0;
+}
+
+void ReadFile(Tree **T, Flower &data)
+{
+  std::ifstream file("flowers");
+  std::string line;
+
+  while (getline(file, line)) {
+    std::istringstream fileLine(line);
+    fileLine >> data.name >> data.amount >> data.price >> data.isWild;
+    Add(T, data);
+  file.close();
 }

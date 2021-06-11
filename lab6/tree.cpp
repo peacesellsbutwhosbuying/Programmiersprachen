@@ -30,25 +30,25 @@ int GetTreeSize(Tree* T)
   return left + right + 1;
 }
 
-void Add(Tree** T, int data)
+void Add(Tree*& T, Flower* data)
 {
-  if((*T) == NULL)
+  if(T == NULL)
   {
-    *T = new Tree;
-    (*T)->data = data;
-    (*T)->left = NULL;
-    (*T)->right = NULL;
+    T = new Tree;
+    T->data = *data;
+    T->left = NULL;
+    T->right = NULL;
     return;
   }
 
-  if(data < (*T)->data)
+  if(data->price < T->data.price)
   {
-    Add(&(*T)->left, data);
+    Add(T->left, data);
     std::cout << "Left added" << std::endl;
   }
   else
   {
-    Add(&(*T)->right, data);
+    Add(T->right, data);
     std::cout << "Right added" << std::endl;
   }
 }
@@ -60,20 +60,20 @@ void PrintLeftRightRight(Tree* T)
     return;
   }
   PrintLeftRightRight(T->left);
-  std::cout << T->data << " ";
+  std::cout << T->data.name << " " << T->data.amount << " " << T->data.price << T->data.isWild  << std::endl;
   PrintLeftRightRight(T->right);
 }
 
-Tree* Search(Tree*& T, int data)
+Tree* Search(Tree*& T, Flower data)
 {
   if(T == NULL)
   {
     return NULL;
   }
 
-  while(T->data != data)
+  while(T->data.price != data.price)
   {
-    if(data < T->data)
+    if(data.price < T->data.price)
     {
       T = T->left;
     }

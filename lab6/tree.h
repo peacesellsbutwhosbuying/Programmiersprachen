@@ -1,9 +1,18 @@
 #ifndef TREE_H
 #define TREE_H
+#include<string>
+
+struct Flower
+{
+  std::string name;
+  int amount;
+  double price;
+  bool isWild;
+};
 
 struct Tree
 {
-  int data;
+  Flower data;
   Tree* left;
   Tree* right;
 };
